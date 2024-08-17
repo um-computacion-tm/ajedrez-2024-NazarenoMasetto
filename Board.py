@@ -44,5 +44,11 @@ class Board:
     def get_piece(self, row, col):
         
         return self._positions_[row][col]
-
     
+    def move_piece(self, from_row, from_col, to_row, to_col):
+        piece = self.get_piece(from_row, from_col)
+        if piece and piece.is_valid_move(self, from_row, from_col, to_row, to_col):
+            self._positions_[to_row][to_col] = piece
+            self._positions_[from_row][from_col] = None 
+            
+        else: raise ValueError("Movimiento inválido")
