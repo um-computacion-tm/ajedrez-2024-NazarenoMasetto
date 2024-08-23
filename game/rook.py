@@ -1,4 +1,4 @@
-from game.piece import Piece
+from game.piece import *
 
 class Rook(Piece):
     def _init_(self, color, position):
