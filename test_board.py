@@ -1,14 +1,14 @@
-import sys
-import os
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+# import sys
+# import os
+# sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 import unittest
-from game.board import *
-from game.rook import *
-from game.knight import *
-from game.bishop import *
-from game.queen import *
-from game.king import *
-from game.pawn import *
+from board import *
+from rook import *
+from knight import *
+from bishop import *
+from queen import *
+from king import *
+from pawn import *
 
 class TestBoardSetup(unittest.TestCase):
     

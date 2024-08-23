@@ -1,4 +1,4 @@
-from game.piece import *
+from piece import *
 
 class Pawn(Piece):
     def __init__(self, color, position=None):

@@ -4,9 +4,8 @@ import os
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
 import unittest
-from game.piece import *
-from game.board import *
-from game.pawn import *
+from board import *
+from pawn import *
 
 class TestPawn(unittest.TestCase):
     
