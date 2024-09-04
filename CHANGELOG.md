@@ -1,4 +1,10 @@
 ## Changelog
+## [0.5] - 03/09/2024
+
+## Agregado
+
+-Avanzando clase rook
+
 ## [0.4] - 21/08/2024
 
 ## Agregado
