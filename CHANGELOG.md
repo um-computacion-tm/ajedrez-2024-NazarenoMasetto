@@ -1,4 +1,10 @@
 ## Changelog
+## [0.6] - 05/09/2024
+
+## Agregado
+
+-Subiendo los test de rook
+
 ## [0.5] - 03/09/2024
 
 ## Agregado
