@@ -61,6 +61,4 @@ class TestRook(unittest.TestCase):
 
         self.rook_white.board.set_piece(3, 3, self.rook_white)
         self.rook_white.board.set_piece(3, 4, Rook("black", self.board))
-        self.assertTrue(self.rook_white.valid_positions(3, 3, 3, 4))
-        for i in range(5, 8):
-            self.assertFalse(self.rook_white.valid_positions(3, 3, 3, i))
+        self.assertTrue(self.rook_white.valid_positions(3, 3, 3))

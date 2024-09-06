@@ -1,4 +1,9 @@
 ## Changelog
+## [0.7] - 06/09/2024
+
+## Agregado
+
+-Modificando la clase piece
 ## [0.6] - 05/09/2024
 
 ## Agregado
