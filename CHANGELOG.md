@@ -1,4 +1,9 @@
 ## Changelog
+## [0.] - 0/09/2024
+
+## Agregado
+
+-Avanzando Bishop
 ## [0.7] - 06/09/2024
 
 ## Agregado
