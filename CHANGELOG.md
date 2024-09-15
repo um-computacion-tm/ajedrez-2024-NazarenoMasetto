@@ -1,5 +1,10 @@
 ## Changelog
-## [0.] - 0/09/2024
+## [0.9] - 0/09/2024
+
+## Agregado
+
+-Modificando queen y king
+## [0.8] - 0/09/2024
 
 ## Agregado
 
