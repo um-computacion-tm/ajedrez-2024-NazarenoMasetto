@@ -9,7 +9,7 @@
 ## Agregado
 
 -Modificando queen y king
-## [0.8] - 0/09/2024
+## [0.8] - 08/09/2024
 
 ## Agregado
 
