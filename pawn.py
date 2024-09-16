@@ -1,35 +1,23 @@
-from piece import *
+class Pawn:
+    def valid_moves(self, position, board):
+        row, col = position
+        direction = 1 if self._color_ == "White" else -1
+        moves = []
 
-class Pawn(Piece):
-    def __init__(self, color, position=None):
-        super().__init__(color, position)
-        self.__initial_position__ = position
+        """Avanza un lugar"""
+        if 0 <= row + direction < 8 and board[row + direction][col] == " ":
+            moves.append((row + direction, col))
+
+        """Avanza dos casillas si es el primer movimiento del peón"""
+        if (self._color_ == "White" and row == 1) or (self._color_ == "Black" and row == 6):
+            if board[row + direction][col] == " " and board[row + 2 * direction][col] == " ":
+                moves.append((row + 2 * direction, col))
+
         
-    def is_valid_move(self, board, from_row, from_col, to_row, to_col):
-        # Movimiento hacia adelante: para peones que no están en la fila inicial
-        direction = 1 if self.__color__ == "WHITE" else -1
-        
-        # Movimiento inicial: dos pasos hacia adelante
-        if (from_row == self.__initial_position__[0] and 
-            from_col == self.__initial_position__[1]):
-            if (to_row == from_row + 2 * direction and from_col == to_col and
-                board.get_piece(to_row, to_col) is None and 
-                board.get_piece(from_row + direction, from_col) is None):
-                return True
+        for capture_col in [col - 1, col + 1]:
+            if 0 <= capture_col < 8 and 0 <= row + direction < 8:
+                target_piece = board[row + direction][capture_col]
+                if target_piece != " " and target_piece._color_ != self._color_:
+                    moves.append((row + direction, capture_col))
 
-        # Movimiento normal: un paso hacia adelante
-        if to_row == from_row + direction and from_col == to_col:
-            if board.get_piece(to_row, to_col) is None:
-                return True
-            
-        # Captura: un paso en diagonal hacia adelante
-        if (to_row == from_row + direction and 
-            abs(to_col - from_col) == 1 and 
-            board.get_piece(to_row, to_col) is not None):
-            return True
-
-        return False
-    
-    def move(self, to_row, to_col):
-        #Actualiza la posición del peón.
-        self.__position__ = (to_row, to_col)
+        return moves

@@ -1,5 +1,10 @@
 ## Changelog
-## [0.9] - 0/09/2024
+## [0.10] - 15/09/2024
+
+## Agregado
+
+-Modificando pawn
+## [0.9] - 14/09/2024
 
 ## Agregado
 
