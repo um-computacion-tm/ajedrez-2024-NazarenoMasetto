@@ -1,44 +1,77 @@
-import sys
-import os
+from pawn import Pawn
 
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+pawn = Pawn("White")
 
-import unittest
-from board import *
-from pawn import *
+board = [[" " for _ in range(8)] for _ in range(8)]
 
-class TestPawn(unittest.TestCase):
-    
-    def setUp(self):
-        self.__board__ = Board()
-        self.__white_pawn__ = Pawn("WHITE", (6, 0))
-        self.__black_pawn__ = Pawn("BLACK", (1, 0))
-        self.__board__.__positions__[6][0] = self.__white_pawn__
-        self.__board__.__positions__[1][0] = self.__black_pawn__
+board[2][3] = "W"
 
-    def test_pawn_initialization(self):
-        pawn = Pawn("WHITE", (6, 0))
-        self.assertEqual(pawn.get_color(), "WHITE")
-        self.assertEqual(pawn.get_position(), (6, 0))
-        self.assertEqual(pawn.__initial_position__, (6, 0))
+print(pawn.valid_moves((2, 3), board))  # [(3, 3)]
 
-    def test_initial_move_two_squares(self):
-        self.assertTrue(self.__white_pawn__.is_valid_move(self.__board__, 6, 0, 4, 0))
 
-    def test_single_step_move(self):
-        self.__white_pawn__.move(5, 0)
-        self.assertTrue(self.__white_pawn__.is_valid_move(self.__board__, 5, 0, 4, 0))
-        self.__white_pawn__.move(4, 0)
-        self.assertEqual(self.__white_pawn__.get_position(), (4, 0))
 
-    def test_invalid_two_step_move_after_initial(self):
-        self.__white_pawn__.move(5, 0)  # Blanco avanza un paso
-        self.assertFalse(self.__white_pawn__.is_valid_move(self.__board__, 5, 0, 3, 0))  # No puede avanzar dos pasos ahora
 
-    def test_valid_capture(self):
-        black_pawn = Pawn("BLACK", (5, 1))
-        self.__board__.__positions__[5][1] = black_pawn
-        self.assertTrue(self.__white_pawn__.is_valid_move(self.__board__, 6, 0, 5, 1))  # Blanco captura diagonalmente
-if __name__ == '__main__':
-    unittest.main()
-    
+pawn = Pawn("White")
+
+board = [[" " for _ in range(8)] for _ in range(8)]
+
+board[1][3] = "W"
+
+print(pawn.valid_moves((1, 3), board))  # [(2, 3), (3, 3)]
+
+
+
+
+pawn = Pawn("White")
+
+board = [[" " for _ in range(8)] for _ in range(8)]
+
+board[2][3] = "W"
+
+board[3][2] = "B"
+
+print(pawn.valid_moves((2, 3), board))  # [(3, 2)]
+
+
+
+pawn = Pawn("White")
+
+board = [[" " for _ in range(8)] for _ in range(8)]
+
+board[2][3] = "W"
+
+board[3][4] = "B"
+
+print(pawn.valid_moves((2, 3), board))  # [(3, 4)]
+
+
+
+
+pawn = Pawn("White")
+
+board = [[" " for _ in range(8)] for _ in range(8)]
+
+board[2][3] = "W"
+
+board[3][3] = "W"
+
+print(pawn.valid_moves((2, 3), board))  # []
+
+
+
+pawn = Pawn("White")
+
+board = [[" " for _ in range(8)] for _ in range(8)]
+
+board[0][3] = "W"
+
+print(pawn.valid_moves((0, 3), board))  # []
+
+
+pawn = Pawn("White")
+
+board = [[" " for _ in range(8)] for _ in range(8)]
+
+board[7][3] = "W"
+
+print(pawn.valid_moves((7, 3), board))  # []

@@ -1,4 +1,9 @@
 ## Changelog
+## [0.11] - 17/09/2024
+
+## Agregado
+
+-Cambiando test de pawn 
 ## [0.10] - 15/09/2024
 
 ## Agregado
