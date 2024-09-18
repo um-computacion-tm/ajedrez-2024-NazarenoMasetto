@@ -1,4 +1,9 @@
 ## Changelog
+## [0.12] - 18/09/2024
+
+## Agregado
+
+-Haciendo test de king
 ## [0.11] - 17/09/2024
 
 ## Agregado
