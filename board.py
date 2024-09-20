@@ -1,57 +1,63 @@
+from pawn import Pawn
 from rook import Rook
-from knight import Knight
 from bishop import Bishop
+from knight import Knight
 from queen import Queen
 from king import King
-from pawn import Pawn
+from piece import Piece
 
 class Board:
-    def _init_(self):
-        self._positions_ = []
-        for _ in range(8):
-            col = []
-            for _ in range(8):
-                col.append(None)
-            self._positions_.append(col)
+    def __init__(self):
         
-        
-        self._positions_[0][0] = Rook("BLACK")  
-        self._positions_[0][1] = Knight("BLACK")  
-        self._positions_[0][2] = Bishop("BLACK")  
-        self._positions_[0][3] = Queen("BLACK")  
-        self._positions_[0][4] = King("BLACK")  
-        self._positions_[0][5] = Bishop("BLACK")  
-        self._positions_[0][6] = Knight("BLACK")  
-        self._positions_[0][7] = Rook("BLACK")  
-        
-        
-        for i in range(8):
-            self._positions_[1][i] = Pawn("BLACK")
-        
-        
-        self._positions_[7][0] = Rook("WHITE")  
-        self._positions_[7][1] = Knight("WHITE")  
-        self._positions_[7][2] = Bishop("WHITE")  
-        self._positions_[7][3] = Queen("WHITE")  
-        self._positions_[7][4] = King("WHITE")  
-        self._positions_[7][5] = Bishop("WHITE")  
-        self._positions_[7][6] = Knight("WHITE") 
-        self._positions_[7][7] = Rook("WHITE")  
-        
-        
-        for i in range(8):
-            self._positions_[6][i] = Pawn("WHITE")
+        self.__board__ = self.__initialize_board__()
 
-    def _str_(self):
-        board_str = ""
-        for row in self._positions_:
-            for cell in row:
-                if cell is not None:
-                    board_str += str(cell)
+    def __initialize_board__(self):
+       
+        board = [[" " for _ in range(8)] for _ in range(8)]
+        
+        # Piezas blancas
+        board[0] = [
+            Rook("White"), Knight("White"), Bishop("White"), Queen("White"),
+            King("White"), Bishop("White"), Knight("White"), Rook("White")
+        ]
+        board[1] = [Pawn("White") for _ in range(8)]
+        
+        # Piezas negras
+        board[6] = [Pawn("Black") for _ in range(8)]
+        board[7] = [
+            Rook("Black"), Knight("Black"), Bishop("Black"), Queen("Black"),
+            King("Black"), Bishop("Black"), Knight("Black"), Rook("Black")
+        ]
+        
+        return board
+
+    def move_piece(self, start, end):
+       
+        start_row, start_col = self.position_to_indices(start)
+        end_row, end_col = self.position_to_indices(end)
+        
+        # Obtener la pieza en la posición inicial
+        piece = self.__board__[start_row][start_col]
+        
+        if isinstance(piece, Piece):
+            valid_moves = piece.valid_moves((start_row, start_col), self.__board__)
+            
+            # Verificar si el movimiento es válido
+            if (end_row, end_col) in valid_moves:
+                # Verificar si la casilla final está vacía o contiene una pieza del color opuesto
+                if self.__board__[end_row][end_col] == " " or self.__board__[end_row][end_col].__color__ != piece.__color__:
+                    self.__board__[end_row][end_col] = piece
+                    self.__board__[start_row][start_col] = " "
                 else:
-                    board_str += " "
-            board_str += "\n"
-        return board_str
+                    raise ValueError("Movimiento inválido: la casilla está ocupada por una pieza del mismo color")
+            else:
+                raise ValueError("Movimiento no permitido para la pieza seleccionada")
+        else:
+            raise ValueError("No hay ninguna pieza en la posición de inicio")
 
-    def get_piece(self, row, col):
-        return self._positions_[row][col]
+    @staticmethod
+    def position_to_indices(pos):
+        
+        col = ord(pos[0]) - ord('a')
+        row = 8 - int(pos[1])
+        return row, col

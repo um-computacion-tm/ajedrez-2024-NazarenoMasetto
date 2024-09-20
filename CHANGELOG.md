@@ -1,4 +1,9 @@
 ## Changelog
+## [0.13] - 20/09/2024
+
+## Agregado
+
+-Mejorando clase board
 ## [0.12] - 18/09/2024
 
 ## Agregado
