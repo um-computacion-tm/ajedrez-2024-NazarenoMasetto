@@ -1,4 +1,9 @@
 ## Changelog
+## [0.13] - 21/09/2024
+
+## Agregado
+
+-Cambiando clase king
 ## [0.13] - 20/09/2024
 
 ## Agregado
