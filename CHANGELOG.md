@@ -1,5 +1,10 @@
 ## Changelog
-## [0.13] - 21/09/2024
+## [0.15] - 22/09/2024
+
+## Agregado
+
+-Cambiando clase queen
+## [0.14] - 21/09/2024
 
 ## Agregado
 
