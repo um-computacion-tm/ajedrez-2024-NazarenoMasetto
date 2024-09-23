@@ -1,4 +1,9 @@
 ## Changelog
+## [0.16] - 23/09/2024
+
+## Agregado
+
+-Modificando clase cli
 ## [0.15] - 22/09/2024
 
 ## Agregado
