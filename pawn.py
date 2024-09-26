@@ -1,23 +1,38 @@
-class Pawn:
-    def valid_moves(self, position, board):
-        row, col = position
-        direction = 1 if self._color_ == "White" else -1
-        moves = []
+from piece import Piece
+class Pawn(Piece):
+    def __init__(self, color):
+        
+        super().__init__(color)
 
-        """Avanza un lugar"""
-        if 0 <= row + direction < 8 and board[row + direction][col] == " ":
+    def valid_moves(self, current_position, board):
+        
+        row, col = current_position
+        moves = []
+        
+        # Dirección de movimiento: hacia arriba para las blancas, hacia abajo para las negras
+        direction = -1 if self.get_color() == 'White' else 1
+
+        # Movimiento hacia adelante (una casilla)
+        if board[row + direction][col] == " ":
             moves.append((row + direction, col))
 
-        """Avanza dos casillas si es el primer movimiento del peón"""
-        if (self._color_ == "White" and row == 1) or (self._color_ == "Black" and row == 6):
-            if board[row + direction][col] == " " and board[row + 2 * direction][col] == " ":
-                moves.append((row + 2 * direction, col))
+            # Movimiento doble hacia adelante (solo en el primer movimiento)
+            if (self.get_color() == 'White' and row == 6) or (self.get_color() == 'Black' and row == 1):
+                if board[row + 2 * direction][col] == " ":
+                    moves.append((row + 2 * direction, col))
 
-        
-        for capture_col in [col - 1, col + 1]:
-            if 0 <= capture_col < 8 and 0 <= row + direction < 8:
-                target_piece = board[row + direction][capture_col]
-                if target_piece != " " and target_piece._color_ != self._color_:
-                    moves.append((row + direction, capture_col))
+        # Captura diagonal izquierda
+        if col - 1 >= 0 and board[row + direction][col - 1] != " ":
+            if board[row + direction][col - 1].get_color() != self.get_color():
+                moves.append((row + direction, col - 1))
+
+        # Captura diagonal derecha
+        if col + 1 <= 7 and board[row + direction][col + 1] != " ":
+            if board[row + direction][col + 1].get_color() != self.get_color():
+                moves.append((row + direction, col + 1))
 
         return moves
+
+    def get_symbol(self):
+        
+        return "P" if self.get_color() == 'White' else "p"

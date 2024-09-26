@@ -1,4 +1,9 @@
 ## Changelog
+## [0.17] - 26/09/2024
+
+## Agregado
+
+-Mejorando clase pawn
 ## [0.16] - 23/09/2024
 
 ## Agregado
