@@ -1,4 +1,9 @@
 ## Changelog
+## [0.18] - 27/09/2024
+
+## Agregado
+
+-Mejorando clase knight
 ## [0.17] - 26/09/2024
 
 ## Agregado
