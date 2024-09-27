@@ -49,39 +49,55 @@ class Board:
         :param end: La posición final en formato de ajedrez (e.g., "e4").
         :raises ValueError: Si el movimiento no es válido o no hay pieza en la posición de inicio.
         """
-        start_row, start_col = self.position_to_indices(start)
-        end_row, end_col = self.position_to_indices(end)
+        start_pos = self.position_to_indices(start)
+        end_pos = self.position_to_indices(end)
         
-        piece = self.get_piece_at(start_row, start_col)
+        piece = self.get_piece_at(start_pos)
         
         if not piece:
             raise ValueError("No hay ninguna pieza en la posición de inicio")
         
-        if not self.is_valid_move(piece, start_row, start_col, end_row, end_col):
+        if not self.is_valid_move(piece, start_pos, end_pos):
             raise ValueError("Movimiento no permitido para la pieza seleccionada")
         
-        self.perform_move(piece, start_row, start_col, end_row, end_col)
+        self.perform_move(piece, start_pos, end_pos)
 
-    def get_piece_at(self, row, col):
+    def get_piece_at(self, pos):
         """
         Devuelve la pieza en una posición específica del tablero.
+        :param pos: Una tupla con la posición (fila, columna).
+        :return: La pieza en esa posición o None si no hay pieza.
         """
+        row, col = pos
         piece = self.__board__[row][col]
         return piece if isinstance(piece, Piece) else None
 
-    def is_valid_move(self, piece, start_row, start_col, end_row, end_col):
+    def is_valid_move(self, piece, start_pos, end_pos):
         """
         Verifica si el movimiento es válido para la pieza seleccionada.
+        :param piece: La pieza que se está moviendo.
+        :param start_pos: Una tupla con la posición de inicio (fila, columna).
+        :param end_pos: Una tupla con la posición final (fila, columna).
+        :return: True si el movimiento es válido, False en caso contrario.
         """
-        valid_moves = piece.valid_moves((start_row, start_col), self.__board__)
+        start_row, start_col = start_pos
+        end_row, end_col = end_pos
+        
+        valid_moves = piece.valid_moves(start_pos, self.__board__)
         return (end_row, end_col) in valid_moves and \
                (self.__board__[end_row][end_col] == " " or
                 self.__board__[end_row][end_col].__color__ != piece.__color__)
 
-    def perform_move(self, piece, start_row, start_col, end_row, end_col):
+    def perform_move(self, piece, start_pos, end_pos):
         """
         Realiza el movimiento de la pieza en el tablero.
+        :param piece: La pieza que se está moviendo.
+        :param start_pos: Una tupla con la posición de inicio (fila, columna).
+        :param end_pos: Una tupla con la posición final (fila, columna).
         """
+        start_row, start_col = start_pos
+        end_row, end_col = end_pos
+        
         self.__board__[end_row][end_col] = piece
         self.__board__[start_row][start_col] = " "
 
