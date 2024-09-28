@@ -1,4 +1,9 @@
 ## Changelog
+## [0.19] - 28/09/2024
+
+## Agregado
+
+-Mejorando clase Piece
 ## [0.18] - 27/09/2024
 
 ## Agregado

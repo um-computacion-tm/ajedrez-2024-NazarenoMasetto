@@ -1,76 +1,45 @@
-class Piece:
-    def __init__(self, color, board):
-        self.__color__ = color
-        self.__board__ = board
+from abc import ABC, abstractmethod
 
-    def __str__(self):
-        raise NotImplementedError("Subclasses must implement __str__")
+class Piece(ABC):
+    def __init__(self, color):
+       
+        self.__color__ = color
 
     def get_color(self):
+        
         return self.__color__
 
+    @abstractmethod
+    def valid_moves(self, current_position, board):
+       
+        pass
 
-class King(Piece):
-    def __init__(self, color, board):
-        super().__init__(color, board)
-
-    def __str__(self):
-        if self.get_color() == "WHITE":
-            return "White King"
-        else:
-            return "Black King"
-
-
-class Queen(Piece):
-    def __init__(self, color, board):
-        super().__init__(color, board)
+    @abstractmethod
+    def get_symbol(self):
+       
+        pass
 
     def __str__(self):
-        if self.get_color() == "WHITE":
-            return "White Queen"
-        else:
-            return "Black Queen"
+        
+        return self.get_symbol()
 
+    def get_moves_in_directions(self, current_position, board, directions):
+        
+        row, col = current_position
+        moves = []
 
-class Rook(Piece):
-    def __init__(self, color, board):
-        super().__init__(color, board)
+        for dr, dc in directions:
+            new_row, new_col = row + dr, col + dc
+            # Continuar en una dirección hasta que encontremos un borde del tablero o una pieza
+            while 0 <= new_row < 8 and 0 <= new_col < 8:
+                if board[new_row][new_col] == " ":
+                    moves.append((new_row, new_col))  # Casilla vacía, movimiento válido
+                elif board[new_row][new_col].get_color() != self.get_color():
+                    moves.append((new_row, new_col))  # Captura válida
+                    break  # Detener después de capturar
+                else:
+                    break  # No puede moverse más allá de una pieza del mismo color
+                new_row += dr
+                new_col += dc
 
-    def __str__(self):
-        if self.get_color() == "WHITE":
-            return "White Rook"
-        else:
-            return "Black Rook"
-
-
-class Bishop(Piece):
-    def __init__(self, color, board):
-        super().__init__(color, board)
-
-    def __str__(self):
-        if self.get_color() == "WHITE":
-            return "White Bishop"
-        else:
-            return "Black Bishop"
-
-
-class Knight(Piece):
-    def __init__(self, color, board):
-        super().__init__(color, board)
-
-    def __str__(self):
-        if self.get_color() == "WHITE":
-            return "White Knight"
-        else:
-            return "Black Knight"
-
-
-class Pawn(Piece):
-    def __init__(self, color, board):
-        super().__init__(color, board)
-
-    def __str__(self):
-        if self.get_color() == "WHITE":
-            return "White Pawn"
-        else:
-            return "Black Pawn"
+        return moves
