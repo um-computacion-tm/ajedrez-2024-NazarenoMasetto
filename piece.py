@@ -2,7 +2,7 @@ from abc import ABC, abstractmethod
 
 class Piece(ABC):
     def __init__(self, color):
-       
+        
         self.__color__ = color
 
     def get_color(self):
@@ -11,7 +11,7 @@ class Piece(ABC):
 
     @abstractmethod
     def valid_moves(self, current_position, board):
-       
+        
         pass
 
     @abstractmethod
@@ -29,17 +29,36 @@ class Piece(ABC):
         moves = []
 
         for dr, dc in directions:
-            new_row, new_col = row + dr, col + dc
-            # Continuar en una dirección hasta que encontremos un borde del tablero o una pieza
-            while 0 <= new_row < 8 and 0 <= new_col < 8:
-                if board[new_row][new_col] == " ":
-                    moves.append((new_row, new_col))  # Casilla vacía, movimiento válido
-                elif board[new_row][new_col].get_color() != self.get_color():
-                    moves.append((new_row, new_col))  # Captura válida
-                    break  # Detener después de capturar
-                else:
-                    break  # No puede moverse más allá de una pieza del mismo color
-                new_row += dr
-                new_col += dc
+            moves += self.__explore_direction(row, col, dr, dc, board)
 
         return moves
+
+    def __explore_direction(self, row, col, dr, dc, board):
+       
+        new_row, new_col = row + dr, col + dc
+        moves = []
+
+        while self.__is_within_board(new_row, new_col):
+            if self.__can_move_to(new_row, new_col, board):
+                moves.append((new_row, new_col))
+                if self.__is_capture(new_row, new_col, board):
+                    break
+            else:
+                break
+
+            new_row += dr
+            new_col += dc
+
+        return moves
+
+    def __is_within_board(self, row, col):
+        
+        return 0 <= row < 8 and 0 <= col < 8
+
+    def __can_move_to(self, row, col, board):
+        
+        return board[row][col] == " " or board[row][col].get_color() != self.get_color()
+
+    def __is_capture(self, row, col, board):
+       
+        return board[row][col] != " " and board[row][col].get_color() != self.get_color()
