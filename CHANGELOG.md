@@ -4,6 +4,7 @@
 ## Agregado
 
 -Mejorando clase Rook
+-Mejorando clase bishop
 ## [0.19] - 28/09/2024
 
 ## Agregado
