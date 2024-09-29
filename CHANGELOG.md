@@ -1,4 +1,9 @@
 ## Changelog
+## [0.20] - 29/09/2024
+
+## Agregado
+
+-Mejorando clase Rook
 ## [0.19] - 28/09/2024
 
 ## Agregado
