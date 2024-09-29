@@ -22,10 +22,10 @@ class Bishop(Piece):
         new_row, new_col = row + dr, col + dc
         moves = []
         
-        while self._is_within_bounds(new_row, new_col):
-            if self._is_empty(board, new_row, new_col):
+        while self.is_within_bounds(new_row, new_col):
+            if self.is_empty(board, new_row, new_col):
                 moves.append((new_row, new_col))
-            elif self._is_opponent_piece(board, new_row, new_col):
+            elif self.is_opponent_piece(board, new_row, new_col):
                 moves.append((new_row, new_col))
                 break
             else:
@@ -34,18 +34,6 @@ class Bishop(Piece):
             new_col += dc
 
         return moves
-
-    def _is_within_bounds(self, row, col):
-        """Verifica si una posición está dentro del tablero."""
-        return 0 <= row < 8 and 0 <= col < 8
-
-    def _is_empty(self, board, row, col):
-        """Verifica si una casilla está vacía."""
-        return board[row][col] == " "
-
-    def _is_opponent_piece(self, board, row, col):
-        """Verifica si una casilla contiene una pieza enemiga."""
-        return board[row][col] != " " and board[row][col].get_color() != self.get_color()
 
     def get_symbol(self):
         return "B" if self.get_color() == 'White' else "b"
