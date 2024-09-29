@@ -1,5 +1,12 @@
 from piece import Piece
 
+
+def get_standard_directions():
+    """
+    Devuelve las direcciones estándar para piezas que se mueven en línea recta y diagonal.
+    """
+    return [(-1, 0), (1, 0), (0, -1), (0, 1), (-1, -1), (-1, 1), (1, -1), (1, 1)]
+
 class King(Piece):
     def __init__(self, color):
         super().__init__(color)
@@ -8,7 +15,7 @@ class King(Piece):
         """
         Calcula los movimientos válidos del rey según las reglas del ajedrez.
         """
-        directions = [(-1, 0), (1, 0), (0, -1), (0, 1), (-1, -1), (-1, 1), (1, -1), (1, 1)]
+        directions = get_standard_directions()  # Usamos la función compartida para obtener las direcciones
         return self._generate_king_moves(current_position, board, directions)
 
     def _generate_king_moves(self, current_position, board, directions):
