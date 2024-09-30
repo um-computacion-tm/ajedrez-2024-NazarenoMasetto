@@ -1,5 +1,4 @@
 from piece import Piece
-
 class Pawn(Piece):
     def __init__(self, color):
         super().__init__(color)
@@ -22,7 +21,8 @@ class Pawn(Piece):
         # Determina la dirección del peón en función de su color
         return -1 if self.get_color() == 'White' else 1
 
-    def add_forward_moves(self, row, col, direction, board, moves):
+    def add_forward_moves(self, position, direction, board, moves):
+        row, col = position
         # Movimiento hacia adelante (una casilla)
         if board[row + direction][col] == " ":
             moves.append((row + direction, col))
@@ -36,7 +36,8 @@ class Pawn(Piece):
         # Verifica si el peón está en su posición inicial
         return (self.get_color() == 'White' and row == 6) or (self.get_color() == 'Black' and row == 1)
 
-    def add_diagonal_captures(self, row, col, direction, board, moves):
+    def add_diagonal_captures(self, position, direction, board, moves):
+        row, col = position
         # Captura diagonal izquierda
         if col - 1 >= 0:
             self.check_capture(row, col - 1, direction, board, moves)
