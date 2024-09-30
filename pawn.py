@@ -1,4 +1,5 @@
 from piece import Piece
+
 class Pawn(Piece):
     def __init__(self, color):
         super().__init__(color)
@@ -8,44 +9,34 @@ class Pawn(Piece):
         moves = []
 
         direction = self.get_direction()
-        
+
         # Movimiento hacia adelante
-        self.add_forward_moves(current_position, direction, board, moves)
+        self.add_move_if_valid(row + direction, col, board, moves)
+        if self.is_first_move(row) and self.is_valid_move(row + 2 * direction, col, board):
+            self.add_move_if_valid(row + 2 * direction, col, board, moves)
 
         # Capturas diagonales
-        self.add_diagonal_captures(current_position, direction, board, moves)
+        for col_offset in [-1, 1]:
+            self.add_capture_if_valid(row + direction, col + col_offset, board, moves)
 
         return moves
 
     def get_direction(self):
-        # Determina la dirección del peón en función de su color
         return -1 if self.get_color() == 'White' else 1
 
-    def add_forward_moves(self, position, direction, board, moves):
-        row, col = position
-        if self.is_valid_move(row + direction, col, board):
-            moves.append((row + direction, col))
-            if self.is_first_move(row):
-                if self.is_valid_move(row + 2 * direction, col, board):
-                    moves.append((row + 2 * direction, col))
+    def add_move_if_valid(self, row, col, board, moves):
+        if self.is_valid_position(row, col) and board[row][col] == " ":
+            moves.append((row, col))
+
+    def add_capture_if_valid(self, row, col, board, moves):
+        if self.is_valid_position(row, col) and board[row][col] != " " and board[row][col].get_color() != self.get_color():
+            moves.append((row, col))
+
+    def is_valid_position(self, row, col):
+        return 0 <= row <= 7 and 0 <= col <= 7
 
     def is_first_move(self, row):
-        # Verifica si el peón está en su posición inicial
         return (self.get_color() == 'White' and row == 6) or (self.get_color() == 'Black' and row == 1)
 
-    def is_valid_move(self, row, col, board):
-        return board[row][col] == " "
-
-    def add_diagonal_captures(self, position, direction, board, moves):
-        row, col = position
-        for col_offset in [-1, 1]:
-            if 0 <= col + col_offset <= 7:
-                if self.is_valid_capture(row + direction, col + col_offset, board):
-                    moves.append((row + direction, col + col_offset))
-
-    def is_valid_capture(self, row, col, board):
-        return board[row][col] != " " and board[row][col].get_color() != self.get_color()
-
     def get_symbol(self):
-        # Retorna el símbolo del peón en función de su color
         return "P" if self.get_color() == 'White' else "p"
