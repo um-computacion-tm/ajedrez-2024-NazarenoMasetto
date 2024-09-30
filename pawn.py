@@ -10,10 +10,10 @@ class Pawn(Piece):
         direction = self.get_direction()
         
         # Movimiento hacia adelante
-        self.add_forward_moves(row, col, direction, board, moves)
+        self.add_forward_moves(current_position, direction, board, moves)
 
         # Capturas diagonales
-        self.add_diagonal_captures(row, col, direction, board, moves)
+        self.add_diagonal_captures(current_position, direction, board, moves)
 
         return moves
 
@@ -23,14 +23,16 @@ class Pawn(Piece):
 
     def add_forward_moves(self, position, direction, board, moves):
         row, col = position
+        new_position = (row + direction, col)
         # Movimiento hacia adelante (una casilla)
-        if board[row + direction][col] == " ":
-            moves.append((row + direction, col))
+        if board[new_position[0]][new_position[1]] == " ":
+            moves.append(new_position)
 
             # Movimiento doble hacia adelante (primer movimiento)
             if self.is_first_move(row):
-                if board[row + 2 * direction][col] == " ":
-                    moves.append((row + 2 * direction, col))
+                new_position = (row + 2 * direction, col)
+                if board[new_position[0]][new_position[1]] == " ":
+                    moves.append(new_position)
 
     def is_first_move(self, row):
         # Verifica si el peón está en su posición inicial
@@ -40,17 +42,19 @@ class Pawn(Piece):
         row, col = position
         # Captura diagonal izquierda
         if col - 1 >= 0:
-            self.check_capture(row, col - 1, direction, board, moves)
+            self.check_capture(position, -1, direction, board, moves)
 
         # Captura diagonal derecha
         if col + 1 <= 7:
-            self.check_capture(row, col + 1, direction, board, moves)
+            self.check_capture(position, 1, direction, board, moves)
 
-    def check_capture(self, row, col, direction, board, moves):
+    def check_capture(self, position, col_offset, direction, board, moves):
+        row, col = position
+        new_position = (row + direction, col + col_offset)
         # Verifica si hay una captura válida en una diagonal
-        if board[row + direction][col] != " ":
-            if board[row + direction][col].get_color() != self.get_color():
-                moves.append((row + direction, col))
+        if board[new_position[0]][new_position[1]] != " ":
+            if board[new_position[0]][new_position[1]].get_color() != self.get_color():
+                moves.append(new_position)
 
     def get_symbol(self):
         # Retorna el símbolo del peón en función de su color
