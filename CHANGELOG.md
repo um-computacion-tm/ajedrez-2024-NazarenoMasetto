@@ -1,4 +1,9 @@
 ## Changelog
+## [0.21] - 1/10/2024
+
+## Agregado
+
+-Mejorando clase knigth
 ## [0.20] - 29/09/2024
 
 ## Agregado
