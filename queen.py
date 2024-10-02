@@ -1,23 +1,21 @@
 from piece import Piece
 
 class Queen(Piece):
+    DIRECTIONS = [  # Direcciones de movimiento, se pueden reutilizar en otras clases
+        (-1, 0), (1, 0),   # Vertical
+        (0, -1), (0, 1),   # Horizontal
+        (-1, -1), (-1, 1), # Diagonales superiores
+        (1, -1), (1, 1)    # Diagonales inferiores
+    ]
+
     def __init__(self, color):
         super().__init__(color)
 
     def valid_moves(self, current_position, board):
-        row, col = current_position
         moves = []
 
-      
-        directions = [
-            (-1, 0), (1, 0),   # Vertical
-            (0, -1), (0, 1),   # Horizontal
-            (-1, -1), (-1, 1), # Diagonales superiores
-            (1, -1), (1, 1)    # Diagonales inferiores
-        ]
-
-        # Recorremos todas las direcciones y añadimos los movimientos válidos
-        for direction in directions:
+        
+        for direction in Queen.DIRECTIONS:
             moves.extend(self._collect_moves_in_direction(current_position, direction, board))
 
         return moves
