@@ -1,6 +1,7 @@
 from juego.piece import Piece
+
 class Knight(Piece):
-    # Movimientos estándar para el caballo
+    
     KNIGHT_MOVES = [(2, 1), (2, -1), (-2, 1), (-2, -1), (1, 2), (1, -2), (-1, 2), (-1, -2)]
 
     def __init__(self, color):
@@ -10,12 +11,20 @@ class Knight(Piece):
         row, col = current_position
         moves = []
 
-        # Iterar sobre los movimientos posibles del caballo
-        for dr, dc in Knight.KNIGHT_MOVES:
-            new_row, new_col = self._calculate_new_position(row, col, dr, dc)
-            # Verificar si la nueva posición está dentro del tablero y si es un movimiento válido
-            if self._is_within_board(new_row, new_col) and self._is_valid_move(new_row, new_col, board):
-                moves.append((new_row, new_col))
+      
+        for move in Knight.KNIGHT_MOVES:
+            moves += self._get_knight_move(row, col, board, move)
+
+        return moves
+
+    def _get_knight_move(self, row, col, board, move):
+        """Calcula y valida un movimiento del caballo."""
+        dr, dc = move
+        new_row, new_col = self._calculate_new_position(row, col, dr, dc)
+        moves = []
+
+        if self._is_within_board(new_row, new_col) and self._is_valid_move(new_row, new_col, board):
+            moves.append((new_row, new_col))
 
         return moves
 
@@ -35,3 +44,4 @@ class Knight(Piece):
     def get_symbol(self):
         """Devuelve el símbolo que representa el caballo en el tablero."""
         return "N" if self.get_color() == 'White' else "n"
+

@@ -9,38 +9,46 @@ class Queen(Piece):
         moves = []
         
         # Definir las 8 direcciones de movimiento
-        directions = [
-            (-1, 0), (1, 0),  # Movimientos verticales
-            (0, -1), (0, 1),  # Movimientos horizontales
-            (-1, -1), (-1, 1),  # Movimientos diagonales hacia arriba
-            (1, -1), (1, 1)  # Movimientos diagonales hacia abajo
-        ]
+        directions = self._get_directions()
 
         # Recorremos cada dirección y añadimos movimientos válidos
         for direction in directions:
-            moves += self._get_moves_in_direction(current_position, board, direction)
+            moves += self._get_moves_in_direction(row, col, board, direction)
 
         return moves
 
-    def _get_moves_in_direction(self, current_position, board, direction):
+    def _get_directions(self):
+        """Devuelve las direcciones de movimiento posibles para la reina."""
+        return [
+            (-1, 0), (1, 0),  
+            (0, -1), (0, 1),  
+            (-1, -1), (-1, 1), 
+            (1, -1), (1, 1)  
+        ]
+
+    def _get_moves_in_direction(self, row, col, board, direction):
         """Genera movimientos válidos en una dirección dada."""
-        row, col = current_position
         dr, dc = direction
         moves = []
         
         new_row, new_col = row + dr, col + dc
-        while 0 <= new_row < 8 and 0 <= new_col < 8:
+        while self._is_within_board(new_row, new_col):
             if board[new_row][new_col] == " ":
-                moves.append((new_row, new_col))  # Casilla vacía
+                moves.append((new_row, new_col))  
             elif board[new_row][new_col].get_color() != self.get_color():
-                moves.append((new_row, new_col))  # Captura válida
-                break  # Detener después de capturar
+                moves.append((new_row, new_col))  
+                break  
             else:
-                break  # Pieza del mismo color, detener
+                break  
             new_row += dr
             new_col += dc
 
         return moves
 
+    def _is_within_board(self, row, col):
+        """Verifica si la posición está dentro de los límites del tablero."""
+        return 0 <= row < 8 and 0 <= col < 8
+
     def get_symbol(self):
         return "Q" if self.get_color() == 'White' else "q"
+
