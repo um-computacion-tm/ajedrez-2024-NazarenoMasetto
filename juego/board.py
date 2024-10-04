@@ -8,39 +8,20 @@ from juego.piece import Piece
 
 class Board:
     def __init__(self):
-        """
-        Constructor de la clase Board. Inicializa el tablero con las piezas en sus posiciones iniciales.
-        """
         self.__board__ = self.__initialize_board__()
-
     def __initialize_board__(self):
-        """
-        Inicializa el tablero de ajedrez con la disposición estándar de piezas.
-        :return: Una lista de listas (8x8) que representa el tablero de ajedrez.
-        """
         board = [[" " for _ in range(8)] for _ in range(8)]
-        
-        # Inicializar filas de piezas principales y peones
-        self.__initialize_pieces(board, "White", 0, 1)
-        self.__initialize_pieces(board, "Black", 7, 6)
-
+        self.__initialize_pieces(board, "White", 7, 6)  # Blancas en filas 7 y 6
+        self.__initialize_pieces(board, "Black", 0, 1)  # Negras en filas 0 y 1
         return board
-
     def __initialize_pieces(self, board, color, back_row, pawn_row):
-        """
-        Inicializa las piezas para un color dado en las filas correspondientes.
-        :param board: El tablero de ajedrez a inicializar.
-        :param color: El color de las piezas ("White" o "Black").
-        :param back_row: La fila donde se colocan las piezas principales (torre, caballo, etc.).
-        :param pawn_row: La fila donde se colocan los peones.
-        """
-        # Piezas principales
-        board[back_row] = [
-            Rook(color), Knight(color), Bishop(color), Queen(color),
-            King(color), Bishop(color), Knight(color), Rook(color)
-        ]
-        # Peones
+        board[back_row] = [Rook(color), Knight(color), Bishop(color), Queen(color),
+                           King(color), Bishop(color), Knight(color), Rook(color)]
         board[pawn_row] = [Pawn(color) for _ in range(8)]
+    def get_board(self):
+        """ Devuelve el estado actual del tablero. """
+        return self.__board__
+        return self.__board__
 
     def move_piece(self, start, end):
         """
