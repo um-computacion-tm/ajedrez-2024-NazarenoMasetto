@@ -1,6 +1,6 @@
-from abc import ABC, abstractmethod
 
-class Piece(ABC):
+
+class Piece:
     def __init__(self, color):
         """
         Constructor de la clase base Piece. 
@@ -15,7 +15,7 @@ class Piece(ABC):
         """
         return self.__color__
 
-    @abstractmethod
+    
     def valid_moves(self, current_position, board):
         """
         Método abstracto que deben implementar todas las piezas.
@@ -24,15 +24,15 @@ class Piece(ABC):
         :param board: El estado actual del tablero como una lista de listas.
         :return: Una lista de posiciones válidas (en coordenadas de matriz) a las que la pieza puede moverse.
         """
-        pass
+        raise NotImplementedError
 
-    @abstractmethod
+    
     def get_symbol(self):
         """
         Método abstracto para obtener el símbolo que representa a la pieza en el tablero.
         :return: Un string que representa el símbolo de la pieza.
         """
-        pass
+        NotImplementedError
 
     def __str__(self):
         """

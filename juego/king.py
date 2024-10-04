@@ -1,4 +1,4 @@
-from piece import Piece
+from juego.piece import Piece
 
 
 def get_standard_directions():

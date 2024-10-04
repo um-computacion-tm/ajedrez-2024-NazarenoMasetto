@@ -1,4 +1,4 @@
-from board import Board
+from juego.board import Board
 
 class Chess:
     def _init_(self):

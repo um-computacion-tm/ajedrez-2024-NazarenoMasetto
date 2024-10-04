@@ -1,10 +1,10 @@
-from pawn import Pawn
-from rook import Rook
-from bishop import Bishop
-from knight import Knight
-from queen import Queen
-from king import King
-from piece import Piece
+from juego.pawn import Pawn
+from juego.rook import Rook
+from juego.bishop import Bishop
+from juego.knight import Knight
+from juego.queen import Queen
+from juego.king import King
+from juego.piece import Piece
 
 class Board:
     def __init__(self):

@@ -1,11 +1,16 @@
+import sys
+import os
+
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+
 import unittest
-from board import Board
-from pawn import Pawn
-from rook import Rook
-from knight import Knight
-from bishop import Bishop
-from queen import Queen
-from king import King
+from juego.board import Board
+from juego.pawn import Pawn
+from juego.rook import Rook
+from juego.knight import Knight
+from juego.bishop import Bishop
+from juego.queen import Queen
+from juego.king import King
 
 class TestBoard(unittest.TestCase):
 

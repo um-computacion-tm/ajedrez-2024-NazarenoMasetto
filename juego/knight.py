@@ -1,4 +1,4 @@
-from piece import Piece
+from juego.piece import Piece
 class Knight(Piece):
     # Movimientos estándar para el caballo
     KNIGHT_MOVES = [(2, 1), (2, -1), (-2, 1), (-2, -1), (1, 2), (1, -2), (-1, 2), (-1, -2)]
