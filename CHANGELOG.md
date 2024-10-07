@@ -1,4 +1,9 @@
 ## Changelog
+## [0.22] - 7/10/2024
+
+## Agregado
+
+-Mejorando clase knigth, queen y king
 ## [0.21] - 1/10/2024
 
 ## Agregado
