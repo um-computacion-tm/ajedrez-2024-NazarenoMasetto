@@ -1,4 +1,5 @@
 from juego.piece import Piece
+
 class King(Piece):
     def __init__(self, color):
         """
@@ -17,17 +18,50 @@ class King(Piece):
         """
         row, col = current_position
         moves = []
-        
-        # Posibles direcciones de movimiento: 8 direcciones (vertical, horizontal y diagonal)
+
+        # Definir las direcciones posibles del rey
         directions = [(-1, 0), (1, 0), (0, -1), (0, 1), (-1, -1), (-1, 1), (1, -1), (1, 1)]
 
-        for dr, dc in directions:
-            new_row, new_col = row + dr, col + dc
-            if 0 <= new_row < 8 and 0 <= new_col < 8:  # Verificar que no salga del tablero
-                if board[new_row][new_col] == " " or board[new_row][new_col].get_color() != self.get_color():
-                    moves.append((new_row, new_col))
+        # Utilizar la función auxiliar para filtrar movimientos válidos
+        moves = self._get_valid_moves(row, col, directions, board)
 
         return moves
+
+    def _get_valid_moves(self, row, col, directions, board):
+        """
+        Función auxiliar que devuelve los movimientos válidos para una pieza en una dirección específica.
+        :param row: La fila actual de la pieza.
+        :param col: La columna actual de la pieza.
+        :param directions: Lista de tuplas con las direcciones a verificar.
+        :param board: El estado actual del tablero.
+        :return: Lista de movimientos válidos en formato (fila, columna).
+        """
+        valid_moves = []
+        for dr, dc in directions:
+            new_row, new_col = row + dr, col + dc
+            if self._is_within_board(new_row, new_col) and self._can_move_to(new_row, new_col, board):
+                valid_moves.append((new_row, new_col))
+        return valid_moves
+
+    def _is_within_board(self, row, col):
+        """
+        Verifica si una posición está dentro de los límites del tablero.
+        :param row: La fila a verificar.
+        :param col: La columna a verificar.
+        :return: True si la posición está dentro del tablero, False si no.
+        """
+        return 0 <= row < 8 and 0 <= col < 8
+
+    def _can_move_to(self, row, col, board):
+        """
+        Verifica si la pieza se puede mover a una posición específica.
+        :param row: La fila a verificar.
+        :param col: La columna a verificar.
+        :param board: El estado actual del tablero.
+        :return: True si la casilla está vacía o contiene una pieza de color contrario.
+        """
+        target_piece = board[row][col]
+        return target_piece == " " or target_piece.get_color() != self.get_color()
 
     def get_symbol(self):
         """
@@ -36,6 +70,3 @@ class King(Piece):
         :return: Un string con el símbolo del rey.
         """
         return "K" if self.get_color() == 'White' else "k"
-
-
-
