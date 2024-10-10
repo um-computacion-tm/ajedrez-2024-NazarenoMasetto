@@ -45,7 +45,7 @@ class King(Piece):
 
     def _is_within_board(self, row, col):
         """
-        Verifica si una posición está dentro de los límites del tablero.
+        Verifica si una posición está dentro de los límites del tablero
         :param row: La fila a verificar.
         :param col: La columna a verificar.
         :return: True si la posición está dentro del tablero, False si no.
