@@ -6,13 +6,19 @@ class Knight(Piece):
 
     def valid_moves(self, current_position, board):
         row, col = current_position
-        knight_moves = [(2, 1), (2, -1), (-2, 1), (-2, -1), (1, 2), (1, -2), (-1, 2), (-1, -2)]
-        return self._get_knight_moves(row, col, knight_moves, board)
+        knight_moves = self._get_knight_moves()  # Usamos una función para obtener los movimientos de un caballo
+        return self._get_valid_knight_moves(row, col, knight_moves, board)
 
     def get_symbol(self):
         return "N" if self.get_color() == 'White' else "n"
 
-    def _get_knight_moves(self, row, col, knight_moves, board):
+    def _get_knight_moves(self):
+        return [
+            (2, 1), (2, -1), (-2, 1), (-2, -1),
+            (1, 2), (1, -2), (-1, 2), (-1, -2)
+        ]
+
+    def _get_valid_knight_moves(self, row, col, knight_moves, board):
         valid_moves = []
         for dr, dc in knight_moves:
             new_row, new_col = row + dr, col + dc
@@ -22,4 +28,3 @@ class Knight(Piece):
 
     def _is_within_board(self, row, col):
         return 0 <= row < 8 and 0 <= col < 8
-
