@@ -5,8 +5,6 @@ class Queen(Piece):
         super().__init__(color)
 
     def valid_moves(self, current_position, board):
-     
-        row, col = current_position
         directions = [
             (-1, 0), (1, 0),  # Vertical
             (0, -1), (0, 1),  # Horizontal
@@ -16,30 +14,37 @@ class Queen(Piece):
         valid_moves = []
 
         # Explorar cada dirección para obtener movimientos válidos
-        for dr, dc in directions:
-            self._explore_direction(row, col, dr, dc, board, valid_moves)
+        for direction in directions:
+            self._explore_direction(current_position, direction, board, valid_moves)
 
         return valid_moves
 
-    def _explore_direction(self, row, col, dr, dc, board, valid_moves):
-        
+    def _explore_direction(self, position, direction, board, valid_moves):
         for step in range(1, 8):  # La reina puede moverse hasta 8 casillas en una dirección
-            new_row = row + dr * step
-            new_col = col + dc * step
-            if not (0 <= new_row < 8 and 0 <= new_col < 8):  # Verificar si está dentro del tablero
-                break
-            
-            target_square = board[new_row][new_col]
-            if target_square == " ":
-                valid_moves.append((new_row, new_col))
-            elif target_square.get_color() != self.get_color():
-                valid_moves.append((new_row, new_col))  # Captura válida
-                break
-            else:
+            new_position = (position[0] + direction[0] * step, position[1] + direction[1] * step)
+            if not self._is_within_board(new_position):
                 break
 
+            if self._process_square(new_position, board, valid_moves):
+                break
+
+    def _is_within_board(self, position):
+        row, col = position
+        return 0 <= row < 8 and 0 <= col < 8
+
+    def _process_square(self, position, board, valid_moves):
+        row, col = position
+        target_square = board[row][col]
+        
+        if target_square == " ":
+            valid_moves.append(position)
+            return False  # Continúa explorando en esta dirección
+        elif target_square.get_color() != self.get_color():
+            valid_moves.append(position)  # Captura válida
+            return True  # Detiene la exploración en esta dirección
+        return True  # Si la casilla está ocupada por una pieza del mismo color, detiene la exploración
+
     def get_symbol(self):
-       
-        return "Q" if self.get_color() == 'White' else "q"
+        return 'Q'
 
 
