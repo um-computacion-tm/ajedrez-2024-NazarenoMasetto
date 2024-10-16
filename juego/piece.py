@@ -31,11 +31,13 @@ class Piece:
         for step in range(1, limit + 1):
             new_row = pos[0] + direction[0] * step
             new_col = pos[1] + direction[1] * step
+            
             if not self._is_within_board(new_row, new_col):
                 break  # Detiene si se sale del tablero
             
             target_square = board[new_row][new_col]
-            if target_square == " " or target_square.get_color() != self.get_color():
+            is_empty_or_enemy = target_square == " " or target_square.get_color() != self.get_color()
+            if is_empty_or_enemy:
                 valid_moves.append((new_row, new_col))  # Movimiento válido o captura
                 if target_square != " ":  # Detiene si hay una pieza
                     break
@@ -48,17 +50,18 @@ class Piece:
     @staticmethod
     def get_moves(move_type):
         """Retorna los movimientos dependiendo del tipo de pieza."""
-        if move_type == 'knight':
-            return [
+        moves = {
+            'knight': [
                 (2, 1), (2, -1), (-2, 1), (-2, -1),
                 (1, 2), (1, -2), (-1, 2), (-1, -2)
-            ]
-        elif move_type == 'directions':
-            return [
+            ],
+            'directions': [
                 (-1, 0), (1, 0),  # Vertical
                 (0, -1), (0, 1),  # Horizontal
                 (-1, -1), (-1, 1), (1, -1), (1, 1)  # Diagonal
             ]
-        else:
+        }
+        if move_type not in moves:
             raise ValueError("Invalid move type provided")
+        return moves[move_type]
 
