@@ -33,18 +33,21 @@ class Piece:
     def _explore_direction(self, row, col, direction, board):
         valid_moves = []
         dr, dc = direction
-        for i in range(1, 8):
-            new_row, new_col = row + dr * i, col + dc * i
+        for step in range(1, 8):
+            new_row, new_col = row + dr * step, col + dc * step
             if not self._is_within_board(new_row, new_col):
                 break
-            target_square = board[new_row][new_col]
-            if self._is_target_valid(target_square):
-                valid_moves.append((new_row, new_col))
-                if target_square != " ":
-                    break
-            else:
-                break
+            valid_moves.extend(self._check_target(new_row, new_col, board))
         return valid_moves
+
+    def _check_target(self, new_row, new_col, board):
+        target_square = board[new_row][new_col]
+        if self._is_target_valid(target_square):
+            if target_square == " ":
+                return [(new_row, new_col)]
+            else:
+                return [(new_row, new_col)]  # Captura
+        return []  # No se puede mover
 
     @staticmethod
     def get_knight_moves():
