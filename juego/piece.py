@@ -17,15 +17,22 @@ class Piece:
     def _get_valid_moves(self, row, col, moves, board):
         valid_moves = []
         for dr, dc in moves:
-            new_row, new_col = row + dr, col + dc
-            if self._is_within_board(new_row, new_col):
-                target_square = board[new_row][new_col]
-                if self._is_target_valid(target_square):
-                    valid_moves.append((new_row, new_col))
+            valid_moves.extend(self._check_move(row, col, dr, dc, board))
         return valid_moves
 
-    def _is_target_valid(self, target_square):
-        return target_square == " " or target_square.get_color() != self.get_color()
+    def _check_move(self, row, col, dr, dc, board):
+        new_row, new_col = row + dr, col + dc
+        if self._is_within_board(new_row, new_col):
+            return self._evaluate_target(new_row, new_col, board)
+        return []
+
+    def _evaluate_target(self, new_row, new_col, board):
+        target_square = board[new_row][new_col]
+        if target_square == " ":
+            return [(new_row, new_col)]  # Movimiento vacío
+        elif target_square.get_color() != self.get_color():
+            return [(new_row, new_col)]  # Captura
+        return []  # No se puede mover
 
     def _is_within_board(self, row, col):
         return 0 <= row < 8 and 0 <= col < 8
@@ -42,11 +49,10 @@ class Piece:
 
     def _check_target(self, new_row, new_col, board):
         target_square = board[new_row][new_col]
-        if self._is_target_valid(target_square):
-            if target_square == " ":
-                return [(new_row, new_col)]
-            else:
-                return [(new_row, new_col)]  # Captura
+        if target_square == " ":
+            return [(new_row, new_col)]  # Movimiento vacío
+        elif target_square.get_color() != self.get_color():
+            return [(new_row, new_col)]  # Captura
         return []  # No se puede mover
 
     @staticmethod
