@@ -29,28 +29,21 @@ class Piece:
         """Explora las posiciones paso a paso en una dirección."""
         valid_moves = []
         for step in range(1, limit + 1):
-            new_pos = (pos[0] + direction[0] * step, pos[1] + direction[1] * step)
-            if self._is_within_board(new_pos):
-                target_moves = self._evaluate_target(new_pos, board)
-                valid_moves.extend(target_moves)
-                if target_moves and board[new_pos[0]][new_pos[1]] != " ":
-                    break  # Detiene la exploración si hay una pieza
-            else:
+            new_row = pos[0] + direction[0] * step
+            new_col = pos[1] + direction[1] * step
+            if not self._is_within_board(new_row, new_col):
                 break  # Detiene si se sale del tablero
+            
+            target_square = board[new_row][new_col]
+            if target_square == " " or target_square.get_color() != self.get_color():
+                valid_moves.append((new_row, new_col))  # Movimiento válido o captura
+                if target_square != " ":  # Detiene si hay una pieza
+                    break
         return valid_moves
 
-    def _evaluate_target(self, pos, board):
-        """Evalúa el destino del movimiento."""
-        target_square = board[pos[0]][pos[1]]
-        if target_square == " ":
-            return [pos]  # Movimiento vacío
-        elif target_square.get_color() != self.get_color():
-            return [pos]  # Captura
-        return []  # No se puede mover
-
-    def _is_within_board(self, pos):
+    def _is_within_board(self, row, col):
         """Comprueba si una posición está dentro del tablero."""
-        return 0 <= pos[0] < 8 and 0 <= pos[1] < 8
+        return 0 <= row < 8 and 0 <= col < 8
 
     @staticmethod
     def get_moves(move_type):
@@ -68,3 +61,4 @@ class Piece:
             ]
         else:
             raise ValueError("Invalid move type provided")
+
