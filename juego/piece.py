@@ -1,4 +1,3 @@
-from Moveexplorer import MoveExplorer
 class Piece:
     def __init__(self, color):
         self.__color__ = color
@@ -16,8 +15,30 @@ class Piece:
         return self.get_symbol()
 
     def _get_valid_moves(self, row, col, moves, board, limit=1):
-        explorer = MoveExplorer(self, board)
-        return explorer.explore(row, col, moves, limit)
+        valid_moves = []
+        for dr, dc in moves:
+            valid_moves.extend(self._explore_moves_in_direction(row, col, dr, dc, board, limit))
+        return valid_moves
+
+    def _explore_moves_in_direction(self, row, col, dr, dc, board, limit=1):
+        """Explora las posiciones en el tablero en una dirección específica."""
+        valid_moves = []
+        for step in range(1, limit + 1):
+            new_row, new_col = row + dr * step, col + dc * step
+            if not self._is_within_board(new_row, new_col):
+                break
+            target_square = board[new_row][new_col]
+            if target_square == " ":
+                valid_moves.append((new_row, new_col))
+            elif target_square.get_color() != self.get_color():
+                valid_moves.append((new_row, new_col))
+                break
+            else:
+                break
+        return valid_moves
+
+    def _is_within_board(self, row, col):
+        return 0 <= row < 8 and 0 <= col < 8
 
     @staticmethod
     def get_moves(move_type):
