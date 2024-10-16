@@ -23,22 +23,15 @@ class Piece:
     def _explore_moves(self, row, col, dr, dc, board, limit=1):
         """Explora las posiciones en el tablero en una dirección o un conjunto de direcciones."""
         valid_moves = []
-        for step in range(1, limit + 1):
-            new_row, new_col = self._calculate_new_position(row, col, dr, dc, step)
+        for step in range(1, limit + 1):  # Explora una cantidad limitada de pasos
+            new_row, new_col = row + dr * step, col + dc * step
             if not self._is_within_board(new_row, new_col):
                 break
-            if not self._process_move(new_row, new_col, board, valid_moves):
+            target_moves = self._evaluate_target(new_row, new_col, board)
+            valid_moves.extend(target_moves)
+            if target_moves and board[new_row][new_col] != " ":  # Si encuentra una pieza, detiene la exploración
                 break
         return valid_moves
-
-    def _calculate_new_position(self, row, col, dr, dc, step):
-        return row + dr * step, col + dc * step
-
-    def _process_move(self, new_row, new_col, board, valid_moves):
-        """Procesa un movimiento y decide si continuar explorando o detenerse."""
-        target_moves = self._evaluate_target(new_row, new_col, board)
-        valid_moves.extend(target_moves)
-        return bool(target_moves and board[new_row][new_col] == " ")
 
     def _evaluate_target(self, new_row, new_col, board):
         target_square = board[new_row][new_col]
@@ -53,15 +46,16 @@ class Piece:
 
     @staticmethod
     def get_moves(move_type):
-        moves = {
-            'knight': [
+        if move_type == 'knight':
+            return [
                 (2, 1), (2, -1), (-2, 1), (-2, -1),
                 (1, 2), (1, -2), (-1, 2), (-1, -2)
-            ],
-            'directions': [
+            ]
+        elif move_type == 'directions':
+            return [
                 (-1, 0), (1, 0),  # Vertical
                 (0, -1), (0, 1),  # Horizontal
                 (-1, -1), (-1, 1), (1, -1), (1, 1)  # Diagonal
             ]
-        }
-        return moves.get(move_type, [])
+        else:
+            raise ValueError("Invalid move type provided")
