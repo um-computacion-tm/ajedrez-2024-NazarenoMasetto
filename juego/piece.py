@@ -17,14 +17,21 @@ class Piece:
     def _get_valid_moves(self, row, col, moves, board):
         valid_moves = []
         for dr, dc in moves:
-            valid_moves.extend(self._check_move(row, col, dr, dc, board))
+            valid_moves.extend(self._explore_moves(row, col, dr, dc, board))
         return valid_moves
 
-    def _check_move(self, row, col, dr, dc, board):
-        new_row, new_col = row + dr, col + dc
-        if self._is_within_board(new_row, new_col):
-            return self._evaluate_target(new_row, new_col, board)
-        return []
+    def _explore_moves(self, row, col, dr, dc, board, limit=1):
+        """Explora las posiciones en el tablero en una dirección o un conjunto de direcciones."""
+        valid_moves = []
+        for step in range(1, limit + 1):  # Explora una cantidad limitada de pasos
+            new_row, new_col = row + dr * step, col + dc * step
+            if not self._is_within_board(new_row, new_col):
+                break
+            target_moves = self._evaluate_target(new_row, new_col, board)
+            valid_moves.extend(target_moves)
+            if target_moves and board[new_row][new_col] != " ":  # Si encuentra una pieza, detiene la exploración
+                break
+        return valid_moves
 
     def _evaluate_target(self, new_row, new_col, board):
         target_square = board[new_row][new_col]
@@ -37,35 +44,18 @@ class Piece:
     def _is_within_board(self, row, col):
         return 0 <= row < 8 and 0 <= col < 8
 
-    def _explore_direction(self, row, col, direction, board):
-        valid_moves = []
-        dr, dc = direction
-        for step in range(1, 8):
-            new_row, new_col = row + dr * step, col + dc * step
-            if not self._is_within_board(new_row, new_col):
-                break
-            valid_moves.extend(self._check_target(new_row, new_col, board))
-        return valid_moves
-
-    def _check_target(self, new_row, new_col, board):
-        target_square = board[new_row][new_col]
-        if target_square == " ":
-            return [(new_row, new_col)]  # Movimiento vacío
-        elif target_square.get_color() != self.get_color():
-            return [(new_row, new_col)]  # Captura
-        return []  # No se puede mover
-
     @staticmethod
-    def get_knight_moves():
-        return [
-            (2, 1), (2, -1), (-2, 1), (-2, -1),
-            (1, 2), (1, -2), (-1, 2), (-1, -2)
-        ]
-
-    @staticmethod
-    def get_directions():
-        return [
-            (-1, 0), (1, 0),  # Vertical
-            (0, -1), (0, 1),  # Horizontal
-            (-1, -1), (-1, 1), (1, -1), (1, 1)  # Diagonal
-        ]
+    def get_moves(move_type):
+        if move_type == 'knight':
+            return [
+                (2, 1), (2, -1), (-2, 1), (-2, -1),
+                (1, 2), (1, -2), (-1, 2), (-1, -2)
+            ]
+        elif move_type == 'directions':
+            return [
+                (-1, 0), (1, 0),  # Vertical
+                (0, -1), (0, 1),  # Horizontal
+                (-1, -1), (-1, 1), (1, -1), (1, 1)  # Diagonal
+            ]
+        else:
+            raise ValueError("Invalid move type provided")
