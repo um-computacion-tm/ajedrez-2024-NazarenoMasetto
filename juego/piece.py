@@ -13,7 +13,6 @@ class Piece:
         """
         return self.__color__
 
-    
     def valid_moves(self, current_position, board):
         """
         Método abstracto que deben implementar todas las piezas.
@@ -24,13 +23,12 @@ class Piece:
         """
         raise NotImplementedError
 
-    
     def get_symbol(self):
         """
         Método abstracto para obtener el símbolo que representa a la pieza en el tablero.
         :return: Un string que representa el símbolo de la pieza.
         """
-        NotImplementedError
+        raise NotImplementedError  # Corrige esta línea, faltaba el 'raise'
 
     def __str__(self):
         """
@@ -39,3 +37,12 @@ class Piece:
         :return: El símbolo que representa a la pieza (definido por las subclases).
         """
         return self.get_symbol()
+
+    def _is_within_board(self, row, col):
+        """
+        Verifica si una posición está dentro de los límites del tablero.
+        :param row: La fila a verificar.
+        :param col: La columna a verificar.
+        :return: True si está dentro del tablero, False si no.
+        """
+        return 0 <= row < 8 and 0 <= col < 8
