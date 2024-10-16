@@ -1,67 +1,43 @@
+from juego.piece import Piece
 class Piece:
     def __init__(self, color):
-        self.color = color
+        """
+        Constructor de la clase base Piece. 
+        :param color: El color de la pieza ('White' o 'Black').
+        """
+        self.__color__ = color
 
     def get_color(self):
-        return self.color
+        """
+        Devuelve el color de la pieza.
+        :return: 'White' o 'Black', dependiendo del color de la pieza.
+        """
+        return self.__color__
 
+    
     def valid_moves(self, current_position, board):
-        raise NotImplementedError("Must implement valid_moves in subclasses.")
+        """
+        Método abstracto que deben implementar todas las piezas.
+        Define los movimientos válidos para cada tipo de pieza.
+        :param current_position: La posición actual de la pieza en coordenadas de matriz.
+        :param board: El estado actual del tablero como una lista de listas.
+        :return: Una lista de posiciones válidas (en coordenadas de matriz) a las que la pieza puede moverse.
+        """
+        pass
+
 
     def get_symbol(self):
-        raise NotImplementedError("Must implement get_symbol in subclasses.")
+        """
+        Método abstracto para obtener el símbolo que representa a la pieza en el tablero.
+        :return: Un string que representa el símbolo de la pieza.
+        """
+        pass
 
     def __str__(self):
+        """
+        Devuelve la representación de la pieza como una cadena de texto.
+        Esto se usa para mostrar la pieza en el tablero.
+        :return: El símbolo que representa a la pieza (definido por las subclases).
+        """
         return self.get_symbol()
-
-    def _get_valid_moves(self, pos, moves, board, limit=1):
-        """Explora las posiciones válidas en varias direcciones."""
-        valid_moves = []
-        for direction in moves:
-            valid_moves.extend(self._explore_moves_in_direction(pos, direction, board, limit))
-        return valid_moves
-
-    def _explore_moves_in_direction(self, pos, direction, board, limit=1):
-        """Explora las posiciones en una dirección específica."""
-        return self._explore_in_steps(pos, direction, board, limit)
-
-    def _explore_in_steps(self, pos, direction, board, limit):
-        """Explora las posiciones paso a paso en una dirección."""
-        valid_moves = []
-        for step in range(1, limit + 1):
-            new_row = pos[0] + direction[0] * step
-            new_col = pos[1] + direction[1] * step
-            
-            if not self._is_within_board(new_row, new_col):
-                break  # Detiene si se sale del tablero
-            
-            target_square = board[new_row][new_col]
-            is_empty_or_enemy = target_square == " " or target_square.get_color() != self.get_color()
-            if is_empty_or_enemy:
-                valid_moves.append((new_row, new_col))  # Movimiento válido o captura
-                if target_square != " ":  # Detiene si hay una pieza
-                    break
-        return valid_moves
-
-    def _is_within_board(self, row, col):
-        """Comprueba si una posición está dentro del tablero."""
-        return 0 <= row < 8 and 0 <= col < 8
-
-    @staticmethod
-    def get_moves(move_type):
-        """Retorna los movimientos dependiendo del tipo de pieza."""
-        moves = {
-            'knight': [
-                (2, 1), (2, -1), (-2, 1), (-2, -1),
-                (1, 2), (1, -2), (-1, 2), (-1, -2)
-            ],
-            'directions': [
-                (-1, 0), (1, 0),  # Vertical
-                (0, -1), (0, 1),  # Horizontal
-                (-1, -1), (-1, 1), (1, -1), (1, 1)  # Diagonal
-            ]
-        }
-        if move_type not in moves:
-            raise ValueError("Invalid move type provided")
-        return moves[move_type]
 
