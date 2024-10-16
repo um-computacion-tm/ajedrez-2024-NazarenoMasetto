@@ -26,9 +26,3 @@ class Piece:
 
     def _is_within_board(self, row, col):
         return 0 <= row < 8 and 0 <= col < 8
-
-    def _get_directions(self):
-        """
-        Define the directions available for movement. Can be overridden in subclasses.
-        """
-        return []
