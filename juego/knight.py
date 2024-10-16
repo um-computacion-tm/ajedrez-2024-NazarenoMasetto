@@ -22,9 +22,7 @@ class Knight(Piece):
         valid_moves = []
         for dr, dc in knight_moves:
             new_row, new_col = row + dr, col + dc
+            # Usamos _is_within_board heredado de Piece
             if self._is_within_board(new_row, new_col) and (board[new_row][new_col] == " " or board[new_row][new_col].get_color() != self.get_color()):
                 valid_moves.append((new_row, new_col))
         return valid_moves
-
-    def _is_within_board(self, row, col):
-        return 0 <= row < 8 and 0 <= col < 8
