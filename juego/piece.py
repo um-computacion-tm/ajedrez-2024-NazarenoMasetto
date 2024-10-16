@@ -30,12 +30,13 @@ class Piece:
         valid_moves = []
         for step in range(1, limit + 1):
             new_pos = (pos[0] + direction[0] * step, pos[1] + direction[1] * step)
-            if not self._is_within_board(new_pos):
-                break
-            target_moves = self._evaluate_target(new_pos, board)
-            valid_moves.extend(target_moves)
-            if target_moves and board[new_pos[0]][new_pos[1]] != " ":  # Si encuentra una pieza, detiene la exploración
-                break
+            if self._is_within_board(new_pos):
+                target_moves = self._evaluate_target(new_pos, board)
+                valid_moves.extend(target_moves)
+                if target_moves and board[new_pos[0]][new_pos[1]] != " ":
+                    break  # Detiene la exploración si hay una pieza
+            else:
+                break  # Detiene si se sale del tablero
         return valid_moves
 
     def _evaluate_target(self, pos, board):
@@ -67,4 +68,3 @@ class Piece:
             ]
         else:
             raise ValueError("Invalid move type provided")
-
