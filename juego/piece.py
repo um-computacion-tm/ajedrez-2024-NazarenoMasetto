@@ -26,3 +26,35 @@ class Piece:
 
     def _is_within_board(self, row, col):
         return 0 <= row < 8 and 0 <= col < 8
+
+    @staticmethod
+    def get_knight_moves():
+        return [
+            (2, 1), (2, -1), (-2, 1), (-2, -1),
+            (1, 2), (1, -2), (-1, 2), (-1, -2)
+        ]
+
+    @staticmethod
+    def get_directions():
+        return [
+            (-1, 0), (1, 0),  # Vertical
+            (0, -1), (0, 1),  # Horizontal
+            (-1, -1), (-1, 1), (1, -1), (1, 1)  # Diagonal
+        ]
+
+    def _explore_direction(self, row, col, direction, board):
+        valid_moves = []
+        dr, dc = direction
+        for i in range(1, 8):
+            new_row, new_col = row + dr * i, col + dc * i
+            if not self._is_within_board(new_row, new_col):
+                break
+            target_square = board[new_row][new_col]
+            if target_square == " ":
+                valid_moves.append((new_row, new_col))
+            elif target_square.get_color() != self.get_color():
+                valid_moves.append((new_row, new_col))
+                break
+            else:
+                break
+        return valid_moves
