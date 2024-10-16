@@ -1,11 +1,13 @@
+# juego/king.py
 from juego.piece import Piece
+from juego.directions import get_king_directions  # Importamos las direcciones
 
 class King(Piece):
     def __init__(self, color):
         super().__init__(color)
 
     def valid_moves(self, current_position, board):
-        directions = self._get_directions()  # Usamos la misma función que en Queen
+        directions = get_king_directions()  # Usamos la función externa para direcciones
         row, col = current_position
         valid_moves = []
 
@@ -13,12 +15,6 @@ class King(Piece):
             self._add_valid_move(row + dr, col + dc, board, valid_moves)
 
         return valid_moves
-
-    def _get_directions(self):
-        return [
-            (-1, 0), (1, 0), (0, -1), (0, 1),  # Vertical y Horizontal
-            (-1, -1), (-1, 1), (1, -1), (1, 1)  # Diagonales
-        ]
 
     def _add_valid_move(self, new_row, new_col, board, valid_moves):
         if self._is_within_board(new_row, new_col):
@@ -31,3 +27,4 @@ class King(Piece):
 
     def get_symbol(self):
         return "K" if self.get_color() == 'White' else "k"
+
