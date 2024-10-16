@@ -14,39 +14,42 @@ class Piece:
     def __str__(self):
         return self.get_symbol()
 
-    def _get_valid_moves(self, row, col, moves, board, limit=1):
+    def _get_valid_moves(self, pos, moves, board, limit=1):
         """Explora las posiciones válidas en varias direcciones."""
         valid_moves = []
-        for dr, dc in moves:
-            valid_moves.extend(self._explore_moves_in_direction(row, col, dr, dc, board, limit))
+        for direction in moves:
+            valid_moves.extend(self._explore_moves_in_direction(pos, direction, board, limit))
         return valid_moves
 
-    def _explore_moves_in_direction(self, row, col, dr, dc, board, limit=1):
+    def _explore_moves_in_direction(self, pos, direction, board, limit=1):
         """Explora las posiciones en una dirección específica."""
+        return self._explore_in_steps(pos, direction, board, limit)
+
+    def _explore_in_steps(self, pos, direction, board, limit):
+        """Explora las posiciones paso a paso en una dirección."""
         valid_moves = []
         for step in range(1, limit + 1):
-            new_row = row + dr * step
-            new_col = col + dc * step
-            if not self._is_within_board(new_row, new_col):
+            new_pos = (pos[0] + direction[0] * step, pos[1] + direction[1] * step)
+            if not self._is_within_board(new_pos):
                 break
-            target_moves = self._evaluate_target(new_row, new_col, board)
+            target_moves = self._evaluate_target(new_pos, board)
             valid_moves.extend(target_moves)
-            if target_moves and board[new_row][new_col] != " ":  # Si encuentra una pieza, detiene la exploración
+            if target_moves and board[new_pos[0]][new_pos[1]] != " ":  # Si encuentra una pieza, detiene la exploración
                 break
         return valid_moves
 
-    def _evaluate_target(self, new_row, new_col, board):
+    def _evaluate_target(self, pos, board):
         """Evalúa el destino del movimiento."""
-        target_square = board[new_row][new_col]
+        target_square = board[pos[0]][pos[1]]
         if target_square == " ":
-            return [(new_row, new_col)]  # Movimiento vacío
+            return [pos]  # Movimiento vacío
         elif target_square.get_color() != self.get_color():
-            return [(new_row, new_col)]  # Captura
+            return [pos]  # Captura
         return []  # No se puede mover
 
-    def _is_within_board(self, row, col):
+    def _is_within_board(self, pos):
         """Comprueba si una posición está dentro del tablero."""
-        return 0 <= row < 8 and 0 <= col < 8
+        return 0 <= pos[0] < 8 and 0 <= pos[1] < 8
 
     @staticmethod
     def get_moves(move_type):
@@ -64,3 +67,4 @@ class Piece:
             ]
         else:
             raise ValueError("Invalid move type provided")
+
