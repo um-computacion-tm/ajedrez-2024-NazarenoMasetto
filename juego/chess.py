@@ -1,7 +1,7 @@
 from juego.board import Board
 
 class Chess:
-    def _init_(self):
+    def __init__(self):
         self.board = Board()
         self.turn = "WHITE"
 

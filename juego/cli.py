@@ -1,9 +1,8 @@
-import sys 
-import os 
+import sys
+import os
 
-sys.path.append (os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))) 
-
-from juego.cli import AjedrezCli
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+from juego.chess import Chess
 
 class AjedrezCli:
     def __init__(self, board):
@@ -64,8 +63,7 @@ class AjedrezCli:
     def check_game_over(self):
         return False
 
-if __name__== "__main__":
-    cli = AjedrezCli
-    """Creates an instance of Ajedrezcli"""
-    cli.start_game
-    "stars the game"
+if __name__ == '__main__':
+    chess_game = Chess()  # Crear una instancia de Chess
+    cli = AjedrezCli(chess_game.board)  # Pasar el tablero del juego de ajedrez
+    cli.start_game()  # Iniciar el juego

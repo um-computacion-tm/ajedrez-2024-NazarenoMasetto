@@ -1,4 +1,4 @@
-from juego.piece import Piece
+
 class Piece:
     def __init__(self, color):
         """
