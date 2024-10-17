@@ -1,3 +1,10 @@
+import sys 
+import os 
+
+sys.path.append (os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))) 
+
+from juego.cli import AjedrezCli
+
 class AjedrezCli:
     def __init__(self, board):
         self.__board__ = board
@@ -56,3 +63,9 @@ class AjedrezCli:
 
     def check_game_over(self):
         return False
+
+if __name__== "__main__":
+    cli = AjedrezCli
+    """Creates an instance of Ajedrezcli"""
+    cli.start_game
+    "stars the game"
