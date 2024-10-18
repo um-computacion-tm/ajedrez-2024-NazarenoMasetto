@@ -1,4 +1,5 @@
 from juego.piece import Piece
+from juego.movementpatterns import MovementPatterns
 
 class Knight(Piece):
     def __init__(self, color):
@@ -6,16 +7,8 @@ class Knight(Piece):
 
     def valid_moves(self, current_position, board):
         row, col = current_position
-        knight_moves = self.get_knight_moves()
+        knight_moves = MovementPatterns.knight_moves()  # Usando la clase refactorizada
         return self._get_valid_moves(row, col, knight_moves, board)
-
-    def get_knight_moves(self):
-        # Estos son los desplazamientos posibles del caballo
-        return [
-            (2, 1), (2, -1), (-2, 1), (-2, -1),
-            (1, 2), (1, -2), (-1, 2), (-1, -2)
-        ]
 
     def get_symbol(self):
         return "N" if self.get_color() == 'White' else "n"
-
