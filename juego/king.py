@@ -1,4 +1,3 @@
-from juego.piece import Piece
 class King(Piece):
     def __init__(self, color):
         super().__init__(color)
@@ -7,10 +6,14 @@ class King(Piece):
         return 'K'
 
     def valid_moves(self, current_position, board):
-        possible_moves = self._get_moves([(0, 1), (1, 0), (0, -1), (-1, 0),
-                                           (1, 1), (1, -1), (-1, 1), (-1, -1)])
+        possible_moves = self._get_king_moves()
         return self.calculate_valid_moves(current_position, possible_moves, board)
 
     @staticmethod
-    def _get_moves(directions):
-        return directions
+    def _get_king_moves():
+        return [
+            {"row": 0, "col": 1}, {"row": 1, "col": 0}, 
+            {"row": 0, "col": -1}, {"row": -1, "col": 0},  # Movimientos ortogonales
+            {"row": 1, "col": 1}, {"row": 1, "col": -1}, 
+            {"row": -1, "col": 1}, {"row": -1, "col": -1}  # Movimientos diagonales
+        ]
