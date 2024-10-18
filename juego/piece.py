@@ -19,13 +19,18 @@ class Piece:
         row, col = current_position
 
         for move in possible_moves:
-            new_row = row + move[0] if isinstance(move, tuple) else row + move["row"]
-            new_col = col + move[1] if isinstance(move, tuple) else col + move["col"]
-            
+            new_row, new_col = self._calculate_new_position(row, col, move)
+
             if self._is_within_board(new_row, new_col) and self._can_move_to(new_row, new_col, board):
                 valid_moves.append((new_row, new_col))
         
         return valid_moves
+
+    def _calculate_new_position(self, row, col, move):
+        # Calcula las nuevas coordenadas basado en el formato del movimiento
+        if isinstance(move, tuple):
+            return row + move[0], col + move[1]
+        return row + move["row"], col + move["col"]
 
     def _is_within_board(self, row, col):
         return 0 <= row < 8 and 0 <= col < 8
