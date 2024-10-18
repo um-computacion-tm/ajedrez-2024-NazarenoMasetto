@@ -23,7 +23,7 @@ class Piece:
         :param board: El estado actual del tablero como una lista de listas.
         :return: Una lista de posiciones válidas (en coordenadas de matriz) a las que la pieza puede moverse.
         """
-        pass
+        raise NotImplementedError
 
 
     def get_symbol(self):
@@ -31,7 +31,7 @@ class Piece:
         Método abstracto para obtener el símbolo que representa a la pieza en el tablero.
         :return: Un string que representa el símbolo de la pieza.
         """
-        pass
+        raise NotImplementedError
 
     def __str__(self):
         """

@@ -9,5 +9,13 @@ class Knight(Piece):
         knight_moves = self.get_knight_moves()
         return self._get_valid_moves(row, col, knight_moves, board)
 
+    def get_knight_moves(self):
+        # Estos son los desplazamientos posibles del caballo
+        return [
+            (2, 1), (2, -1), (-2, 1), (-2, -1),
+            (1, 2), (1, -2), (-1, 2), (-1, -2)
+        ]
+
     def get_symbol(self):
         return "N" if self.get_color() == 'White' else "n"
+
