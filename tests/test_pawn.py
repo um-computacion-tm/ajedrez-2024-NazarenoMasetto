@@ -1,36 +1,40 @@
-from juego.piece import Piece
+import unittest
+from juego.pawn import Pawn
+from juego.board import Board
 
-class Pawn(Piece):
-    def __init__(self, color):
-        super().__init__(color)
+class TestPawn(unittest.TestCase):
 
-    def valid_moves(self, current_position, board):
-        row, col = current_position
-        moves = []
-        direction = self.get_direction()
-        self.add_move_if_valid(row + direction, col, board, moves)
-        if self.is_first_move(row):
-            self.add_move_if_valid(row + 2 * direction, col, board, moves)
-        for col_offset in [-1, 1]:
-            self.add_capture_if_valid(row + direction, col + col_offset, board, moves)
-        return moves
+    def setUp(self):
+        self.board = Board()
+        self.pawn_white = Pawn('White')
 
-    def get_direction(self):
-        return -1 if self.get_color() == 'White' else 1
+    def test_pawn_valid_moves(self):
+        """Verifica los movimientos válidos del peón."""
+        self.board.place_piece(self.pawn_white, (6, 4))  # Peón blanco en e2
+        valid_moves = self.pawn_white.valid_moves((6, 4), self.board.get_board())
+        expected_moves = [(5, 4), (4, 4)]  # Puede avanzar una o dos casillas
+        self.assertEqual(sorted(valid_moves), sorted(expected_moves))
 
-    def add_move_if_valid(self, row, col, board, moves):
-        if self.is_valid_position(row, col) and board[row][col] is None:
-            moves.append((row, col))
+    def test_pawn_blocked_by_same_color(self):
+        """Verifica que el peón no puede moverse si está bloqueado por otra pieza del mismo color."""
+        self.board.place_piece(self.pawn_white, (6, 4))
+        self.board.place_piece(Pawn('White'), (5, 4))  # Bloqueado por otro peón blanco
+        valid_moves = self.pawn_white.valid_moves((6, 4), self.board.get_board())
+        self.assertEqual(valid_moves, [])  # No debe haber movimientos válidos
 
-    def add_capture_if_valid(self, row, col, board, moves):
-        if self.is_valid_position(row, col) and board[row][col] is not None and board[row][col].get_color() != self.get_color():
-            moves.append((row, col))
+    def test_pawn_capture_opponent(self):
+        """Verifica que el peón puede capturar una pieza enemiga en diagonal."""
+        self.board.place_piece(self.pawn_white, (6, 4))
+        self.board.place_piece(Pawn('Black'), (5, 5))  # Peón enemigo en f3
+        valid_moves = self.pawn_white.valid_moves((6, 4), self.board.get_board())
+        self.assertIn((5, 5), valid_moves)  # Puede capturar en diagonal
 
-    def is_valid_position(self, row, col):
-        return 0 <= row <= 7 and 0 <= col <= 7
+    def test_pawn_double_advance_blocked(self):
+        """Verifica que el peón no puede avanzar dos casillas si la primera está bloqueada."""
+        self.board.place_piece(self.pawn_white, (6, 4))
+        self.board.place_piece(Pawn('Black'), (5, 4))  # Bloqueado en e3
+        valid_moves = self.pawn_white.valid_moves((6, 4), self.board.get_board())
+        self.assertNotIn((4, 4), valid_moves)  # No debería poder avanzar dos casillas
 
-    def is_first_move(self, row):
-        return (self.get_color() == 'White' and row == 6) or (self.get_color() == 'Black' and row == 1)
-
-    def get_symbol(self):
-        return "P" if self.get_color() == 'White' else "p"
+if __name__ == '__main__':
+    unittest.main()
