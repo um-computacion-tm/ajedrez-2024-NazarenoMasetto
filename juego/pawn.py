@@ -19,12 +19,13 @@ class Pawn(Piece):
         return -1 if self.get_color() == 'White' else 1
 
     def add_move_if_valid(self, row, col, board, moves):
-        if self.is_valid_position(row, col) and board[row][col] is None:
+        if self.is_valid_position(row, col) and board[row][col] == " ":
             moves.append((row, col))
 
     def add_capture_if_valid(self, row, col, board, moves):
-        if self.is_valid_position(row, col) and board[row][col] is not None and board[row][col].get_color() != self.get_color():
-            moves.append((row, col))
+        if self.is_valid_position(row, col) and board[row][col] != " " and isinstance(board[row][col], Piece):
+            if board[row][col].get_color() != self.get_color():
+                moves.append((row, col))
 
     def is_valid_position(self, row, col):
         return 0 <= row <= 7 and 0 <= col <= 7
