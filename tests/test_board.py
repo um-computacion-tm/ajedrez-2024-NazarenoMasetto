@@ -2,109 +2,84 @@ import sys
 import os
 
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
-
+import unittest
+from juego.board import Board
 from juego.pawn import Pawn
 from juego.rook import Rook
-from juego.bishop import Bishop
-from juego.knight import Knight
-from juego.queen import Queen
 from juego.king import King
-from juego.piece import Piece
 
-import unittest
-class Board:
-    def __init__(self):
-        self.__board__ = self.__initialize_board__()
+class TestBoard(unittest.TestCase):
+    def setUp(self):
+        """ Configuración inicial para cada test. """
+        self.board = Board()  # Inicializa un tablero
 
-    def __initialize_board__(self):
-        board = [[" " for _ in range(8)] for _ in range(8)]
-        self.__initialize_pieces(board, "White", 7, 6)  # Blancas en filas 7 y 6
-        self.__initialize_pieces(board, "Black", 0, 1)  # Negras en filas 0 y 1
-        return board
+    def test_initial_board_setup(self):
+        """ Verifica que el tablero se inicializa correctamente. """
+        board = self.board.get_board()
+        self.assertIsInstance(board[7][0], Rook)  # Torre blanca
+        self.assertIsInstance(board[0][0], Rook)  # Torre negra
+        self.assertIsInstance(board[6][4], Pawn)  # Peón blanco
+        self.assertIsInstance(board[1][4], Pawn)  # Peón negro
+        self.assertIsNone(board[4][4])  # Espacio vacío (debe ser None)
 
-    def __initialize_pieces(self, board, color, back_row, pawn_row):
-        board[back_row] = [Rook(color), Knight(color), Bishop(color), Queen(color),
-                           King(color), Bishop(color), Knight(color), Rook(color)]
-        board[pawn_row] = [Pawn(color) for _ in range(8)]
+    def test_move_piece_valid(self):
+        """ Verifica que una pieza se mueve correctamente de una posición a otra. """
+        self.board.move_piece('e2', 'e4')  # Mueve el peón blanco de e2 a e4
+        board = self.board.get_board()
+        self.assertIsNone(board[6][4])  # La casilla e2 debe estar vacía (índice 6,4)
+        self.assertIsInstance(board[4][4], Pawn)  # La casilla e4 debe tener un peón blanco (índice 4,4)
 
-    def get_board(self):
-        """ Devuelve el estado actual del tablero. """
-        return self.__board__
+    def test_move_piece_invalid(self):
+        """ Verifica que se lanza un error al intentar realizar un movimiento inválido. """
+        with self.assertRaises(ValueError):
+            self.board.move_piece('e2', 'e5')  # Movimiento inválido para un peón
 
-    def move_piece(self, start_pos, end_pos):
-        """
-        Mueve una pieza desde la posición inicial a la final.
-        :param start_pos: La posición inicial en notación algebraica o en formato (fila, columna).
-        :param end_pos: La posición final en notación algebraica o en formato (fila, columna).
-        """
-        # Si las posiciones están en notación algebraica, conviértalas a índices
-        if isinstance(start_pos, str):
-            start_pos = self.position_to_indices(start_pos)
-        if isinstance(end_pos, str):
-            end_pos = self.position_to_indices(end_pos)
+    def test_move_piece_out_of_bounds(self):
+        """ Verifica que se lanza un error al intentar mover fuera del tablero. """
+        with self.assertRaises(ValueError):
+            self.board.move_piece('e2', 'e9')  # Movimiento fuera del tablero
 
-        start_row, start_col = start_pos
-        end_row, end_col = end_pos
+    def test_pawn_capture(self):
+        """ Verifica que un peón pueda capturar una pieza en diagonal. """
+        board = self.board.get_board()
+        board[3][3] = Pawn("Black")  # Coloca un peón negro en d5 (índice 3,3)
+        board[4][4] = Pawn("White")  # Coloca un peón blanco en e4 (índice 4,4)
+        self.board.move_piece('e4', 'd5')  # Peón blanco captura peón negro en d5
+        self.assertIsNone(board[4][4])  # La casilla e4 debe estar vacía
+        self.assertIsInstance(board[3][3], Pawn)  # La casilla d5 debe tener un peón blanco
 
-        piece = self.get_piece_at(start_pos)
+    def test_blocked_by_friendly_piece(self):
+        """ Verifica que una pieza no puede moverse a una casilla ocupada por una pieza del mismo color. """
+        with self.assertRaises(ValueError):
+            self.board.move_piece('e2', 'e1')  # Movimiento inválido, bloqueado por una torre blanca
+
+    def test_check_king_movement(self):
+        """ Verifica que el rey se mueva correctamente. """
+        board = self.board.get_board()
+        board[4][4] = King("White")  # Coloca el rey blanco en e5 (índice 4,4)
         
-        if not piece:
-            raise ValueError("No hay ninguna pieza en la posición de inicio")
-        
-        if not self.is_valid_move(piece, start_pos, end_pos):
-            raise ValueError("Movimiento no permitido para la pieza seleccionada")
-        
-        self.perform_move(piece, start_pos, end_pos)
+        # Depuración: Ver el estado del tablero antes del movimiento
+        print("Estado del tablero antes del movimiento del rey:")
+        for row in board:
+            print([str(piece) for piece in row])  # Mostrar el contenido de cada fila
 
-    def get_piece_at(self, pos):
-        """
-        Devuelve la pieza en una posición específica del tablero.
-        :param pos: Una tupla con la posición (fila, columna).
-        :return: La pieza en esa posición o None si no hay pieza.
-        """
-        row, col = pos
-        piece = self.__board__[row][col]
-        return piece if isinstance(piece, Piece) else None
-
-    def is_valid_move(self, piece, start_pos, end_pos):
-        """
-        Verifica si el movimiento es válido para la pieza seleccionada.
-        :param piece: La pieza que se está moviendo.
-        :param start_pos: Una tupla con la posición de inicio (fila, columna).
-        :param end_pos: Una tupla con la posición final (fila, columna).
-        :return: True si el movimiento es válido, False en caso contrario.
-        """
-        start_row, start_col = start_pos
-        end_row, end_col = end_pos
+        # Verificación explícita de la pieza en e5
+        if not isinstance(board[4][4], King):
+            raise AssertionError("El rey no está en la casilla e5 (índice 4,4)")
         
-        valid_moves = piece.valid_moves(start_pos, self.__board__)
-        return (end_row, end_col) in valid_moves and \
-               (self.__board__[end_row][end_col] == " " or
-                self.__board__[end_row][end_col].get_color() != piece.get_color())
+        # Depuración adicional para verificar la conversión de posición
+        start_pos = self.board.position_to_indices('e5')
+        print(f"Coordenadas convertidas de e5: {start_pos}")
 
-    def perform_move(self, piece, start_pos, end_pos):
-        """
-        Realiza el movimiento de la pieza en el tablero.
-        :param piece: La pieza que se está moviendo.
-        :param start_pos: Una tupla con la posición de inicio (fila, columna).
-        :param end_pos: Una tupla con la posición final (fila, columna).
-        """
-        start_row, start_col = start_pos
-        end_row, end_col = end_pos
+        end_pos = self.board.position_to_indices('f4')
+        print(f"Coordenadas convertidas de f4: {end_pos}")
+
+        # Realizamos el movimiento
+        self.board.move_piece('e5', 'f4')  # Mueve el rey de e5 a f4
         
-        self.__board__[end_row][end_col] = piece
-        self.__board__[start_row][start_col] = " "
-
-    @staticmethod
-    def position_to_indices(pos):
-        """
-        Convierte una posición en formato de ajedrez (e.g., "e2") en índices de matriz.
-        :param pos: La posición en notación algebraica (ejemplo: 'e2').
-        :return: Una tupla (fila, columna) correspondiente a los índices en la matriz.
-        """
-        col = ord(pos[0]) - ord('a')
-        row = 8 - int(pos[1])
-        return row, col
+        board = self.board.get_board()
+        self.assertIsNone(board[4][4])  # La casilla e5 debe estar vacía
+        self.assertIsInstance(board[3][5], King)  # La casilla f4 debe tener al rey blanco
 
 if __name__ == '__main__':
-       unittest.main()
+    unittest.main()
