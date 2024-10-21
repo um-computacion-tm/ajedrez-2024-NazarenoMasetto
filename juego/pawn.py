@@ -5,18 +5,15 @@ class Pawn(Piece):
         super().__init__(color)
 
     def valid_moves(self, current_position, board):
-     row, col = current_position
-     moves = []
-     direction = self.get_direction()
-     # Movimiento hacia adelante
-     self.add_move_if_valid(row + direction, col, board, moves)
-     # Si está en la posición inicial, puede moverse dos casillas
-     if self.is_first_move(row):
-        self.add_move_if_valid(row + 2 * direction, col, board, moves)
-     # Capturas diagonales
-     for col_offset in [-1, 1]:
-        self.add_capture_if_valid(row + direction, col + col_offset, board, moves)
-     return moves
+        row, col = current_position
+        moves = []
+        direction = self.get_direction()
+        self.add_move_if_valid(row + direction, col, board, moves)
+        if self.is_first_move(row):
+            self.add_move_if_valid(row + 2 * direction, col, board, moves)
+        for col_offset in [-1, 1]:
+            self.add_capture_if_valid(row + direction, col + col_offset, board, moves)
+        return moves
 
     def get_direction(self):
         return -1 if self.get_color() == 'White' else 1

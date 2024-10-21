@@ -5,7 +5,7 @@ class Rook(Piece):
         super().__init__(color)
 
     def valid_moves(self, current_position, board):
-        directions = [(-1, 0), (1, 0), (0, -1), (0, 1)]  # Movimientos verticales y horizontales
+        directions = [(-1, 0), (1, 0), (0, -1), (0, 1)]
         return self._generate_linear_moves(current_position, board, directions)
 
     def _generate_linear_moves(self, current_position, board, directions):
