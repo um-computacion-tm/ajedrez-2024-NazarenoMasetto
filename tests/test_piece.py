@@ -1,30 +1,56 @@
+import sys
+import os
 
-from juego.piece import Piece
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+
 import unittest
-# Subclase para testear Piece
-class TestPiece(Piece):
-    def valid_moves(self, current_position, board):
-        # Para este test, solo devolveremos una lista vacía (no implementamos lógica de movimientos reales).
-        return []
-    def get_symbol(self):
-        # Solo devolvemos un símbolo genérico para esta pieza de prueba.
-        return "T"
-class TestPieceClass(unittest.TestCase):
+from juego.piece import Piece
+
+class TestPiece(unittest.TestCase):
     def setUp(self):
-        self.white_piece = TestPiece("White")
-        self.black_piece = TestPiece("Black")
+        """ Configuración inicial para cada test. """
+        self.piece = Piece("White")  # Pieza de prueba que no debería ser instanciada directamente
+        # Un tablero vacío de 8x8
+        self.empty_board = [[None for _ in range(8)] for _ in range(8)]
+
     def test_get_color(self):
-        """Test para verificar que el color de la pieza se devuelve correctamente."""
-        self.assertEqual(self.white_piece.get_color(), "White")
-        self.assertEqual(self.black_piece.get_color(), "Black")
-    def test_get_symbol(self):
-        """Test para verificar que el símbolo de la pieza es devuelto correctamente."""
-        self.assertEqual(str(self.white_piece), "T")  # Llama a __str__, que usa get_symbol()
-        self.assertEqual(str(self.black_piece), "T")
-    def test_valid_moves(self):
-        """Test para verificar que valid_moves devuelve una lista (aunque vacía en esta subclase)."""
-        moves = self.white_piece.valid_moves((0, 0), [])
-        self.assertIsInstance(moves, list)
-        self.assertEqual(len(moves), 0)  # Debe devolver una lista vacía en esta implementación de prueba
-if __name__ == "__main__":
+        """ Verifica que el color de la pieza se obtenga correctamente. """
+        self.assertEqual(self.piece.get_color(), "White")
+
+    def test_abstract_methods(self):
+        """ Verifica que los métodos abstractos lancen NotImplementedError. """
+        with self.assertRaises(NotImplementedError):
+            self.piece.valid_moves((0, 0), self.empty_board)
+        with self.assertRaises(NotImplementedError):
+            self.piece.get_symbol()
+
+    def test_is_within_board(self):
+        """ Verifica que los movimientos dentro y fuera del tablero se detecten correctamente. """
+        self.assertTrue(self.piece._is_within_board(0, 0))  # Esquina inferior izquierda
+        self.assertTrue(self.piece._is_within_board(7, 7))  # Esquina superior derecha
+        self.assertFalse(self.piece._is_within_board(8, 0))  # Fuera del tablero (fila)
+        self.assertFalse(self.piece._is_within_board(0, 8))  # Fuera del tablero (columna)
+
+    def test_calculate_new_position(self):
+        """ Verifica que las nuevas posiciones se calculen correctamente. """
+        self.assertEqual(self.piece._calculate_new_position(4, 4, (1, 0)), (5, 4))  # Movimiento hacia abajo
+        self.assertEqual(self.piece._calculate_new_position(4, 4, (-1, 0)), (3, 4))  # Movimiento hacia arriba
+        self.assertEqual(self.piece._calculate_new_position(4, 4, (0, 1)), (4, 5))  # Movimiento hacia la derecha
+        self.assertEqual(self.piece._calculate_new_position(4, 4, (0, -1)), (4, 3))  # Movimiento hacia la izquierda
+
+    def test_can_move_to_empty_square(self):
+        """ Verifica que una pieza pueda moverse a una casilla vacía. """
+        self.assertTrue(self.piece._can_move_to(4, 4, self.empty_board))  # La casilla está vacía (None)
+
+    def test_can_move_to_enemy_square(self):
+        """ Verifica que una pieza pueda moverse a una casilla ocupada por una pieza enemiga. """
+        self.empty_board[4][4] = Piece("Black")  # Casilla ocupada por una pieza enemiga
+        self.assertTrue(self.piece._can_move_to(4, 4, self.empty_board))
+
+    def test_cannot_move_to_friendly_square(self):
+        """ Verifica que una pieza no pueda moverse a una casilla ocupada por una pieza amiga. """
+        self.empty_board[4][4] = Piece("White")  # Casilla ocupada por una pieza amiga
+        self.assertFalse(self.piece._can_move_to(4, 4, self.empty_board))
+
+if __name__ == '__main__':
     unittest.main()
