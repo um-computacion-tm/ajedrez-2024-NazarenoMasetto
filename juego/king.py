@@ -1,11 +1,10 @@
 from juego.piece import Piece
-
 class King(Piece):
     def __init__(self, color):
         super().__init__(color)
 
     def get_symbol(self):
-        return 'K' if self.get_color() == 'White' else 'k'
+        return 'K'
 
     def valid_moves(self, current_position, board):
         possible_moves = self._get_king_moves()
@@ -19,4 +18,3 @@ class King(Piece):
             {"row": 1, "col": 1}, {"row": 1, "col": -1}, 
             {"row": -1, "col": 1}, {"row": -1, "col": -1}  # Movimientos diagonales
         ]
-

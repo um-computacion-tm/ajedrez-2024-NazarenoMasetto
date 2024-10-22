@@ -5,22 +5,39 @@ class Chess:
         self.board = Board()
         self.turn = "WHITE"
 
+    def is_playing(self):
+        return True
+
     def move(self, from_row, from_col, to_row, to_col):
-        piece = self.board.get_piece_at((from_row, from_col))
-        if not piece:
-            raise ValueError("No hay ninguna pieza en la posición de inicio")
+        # validate coords
+        if not (0 <= from_row < 8 and 0 <= from_col < 8 and 0 <= to_row < 8 and 0 <= to_col < 8):
+            raise ValueError("Coordenadas fuera del tablero")
 
-        if piece.get_color().upper() != self.turn:
-            raise ValueError("Es el turno de las " + self.turn)
+        piece = self.board.get_piece(from_row, from_col)
+        if piece is None:
+            raise ValueError("No hay pieza en la posición de origen")
 
-        if not self.board.is_valid_move(piece, (from_row, from_col), (to_row, to_col)):
-            raise ValueError("Movimiento no permitido para la pieza seleccionada")
+        if piece.color != self.turn:
+            raise ValueError("La pieza no es de tu color")
 
-        self.board.move_piece((from_row, from_col), (to_row, to_col))
+        if not piece.valid_positions(from_row, from_col, to_row, to_col):
+            raise ValueError("Movimiento inválido")
+
+        
+        self.board.move_piece(from_row, from_col, to_row, to_col)
+
+  
         self.change_turn()
 
-    def change_turn(self):
-        self.turn = "BLACK" if self.turn == "WHITE" else "WHITE"
+  
+    def turn(self):
+        return self.turn
 
-    def get_board(self):
-        return self.board.get_board()
+    def show_board(self):
+        return str(self.board)
+
+    def change_turn(self):
+        if self.turn == "WHITE":
+            self.turn = "BLACK"
+        else:
+            self.turn = "WHITE"
